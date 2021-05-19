@@ -1,11 +1,18 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100vw !important;
+  min-height: 100vh !important;
+  padding: 30px 0 15px;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  overflow-x: hidden;
 }
 
+h2 {
+  margin: 22px 0;
+}
 a {
   color: inherit;
   text-decoration: none;
@@ -13,4 +20,29 @@ a {
 
 * {
   box-sizing: border-box;
+}
+.preview svg {
+  width: 120px;
+  height: 120px;
+  filter: invert(1) opacity(90%);
+}
+.iconErrorDiv {
+  padding: 10px;
+  background-color: rgba(255, 0, 0, 0.479);
+  border-radius: 12px;
+}
+.iconError {
+  color: rgb(255, 161, 161);
+  font-weight: 900;
+  text-align: center;
+  font-size: min(40px, 5vw);
+  border-bottom: 1px solid #eee;
+  margin: 0;
+}
+.iconErrorMessage {
+  content: "Make sure you copy pasted correct name";
+  display: block;
+  text-align: center;
+  margin: 0;
+  color: rgb(255, 255, 255);
 }
