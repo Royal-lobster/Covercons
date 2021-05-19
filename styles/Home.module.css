@@ -158,3 +158,9 @@
 .downloadBtn:active {
   top: 0.1em;
 }
+
+.loadingMsg {
+  margin-bottom: 10px;
+  color: #3369ff;
+  padding: 3px;
+}

@@ -15,6 +15,7 @@ export default function Home() {
   const [icon, setIcon] = React.useState("home");
   const [iconInputFieldText, setIconInputFieldText] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleDownloadCover = () => {
     const blob = new Blob([
@@ -26,8 +27,10 @@ export default function Home() {
         <rect width="100%" height="100%" fill="${bgColor.hex}" />
         <g transform="translate(610, 180) scale(10)">
           ${svg
-            .substring(122, svg.length - 6)
-            .replaceAll("<path", "<path fill='#ffffffaf' ")}
+            .substring(svg.indexOf(">") + 1, svg.length - 6)
+            .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+            .replaceAll("<path", "<path fill='#ffffffaf' ")
+            .replaceAll("<rect", "<rect fill='#ffffffaf'")}
         </g>
         </svg>
         `,
@@ -88,6 +91,12 @@ export default function Home() {
               </div>
               <div className={styles.modifierSettings__iconNameSelect}>
                 <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
+
+                {loading ? (
+                  <div className={styles.loadingMsg}>Loading...</div>
+                ) : (
+                  <></>
+                )}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -96,10 +105,12 @@ export default function Home() {
                 >
                   <input
                     type="text"
+                    disabled={loading}
                     value={iconInputFieldText}
                     onChange={(e) => setIconInputFieldText(e.target.value)}
                     placeholder="eg: home"
                   />
+
                   <button className={styles.iconNameSubmit}>Submit</button>
                 </form>
               </div>
@@ -114,7 +125,12 @@ export default function Home() {
             <div className={styles.coverPreview}>
               <h2>Live Preview</h2>
               <div className="preview">
-                <SvgInline icon={icon} svg={svg} setSvg={setSvg} />
+                <SvgInline
+                  icon={icon}
+                  svg={svg}
+                  setSvg={setSvg}
+                  setLoading={setLoading}
+                />
               </div>
               <div className={styles.downloadBtnWraper}>
                 <a ref={downloadHelper_a_tag}></a>
