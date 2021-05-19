@@ -60,7 +60,8 @@
 }
 .modifierSettings__iconNameSelect,
 .modifierSettings__colorSelect,
-.selectIconsFromGoogle {
+.selectIconsFromGoogle,
+.iconTypeSetting {
   margin-bottom: 30px;
   text-align: center;
   color: #3d3d3d;

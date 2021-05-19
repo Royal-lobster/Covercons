@@ -17,7 +17,7 @@ export default function Home() {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [versionCount, setVersionCount] = React.useState();
-
+  const [iconType, setIconType] = React.useState("materialiconstwotone");
   const handleDownloadCover = () => {
     const blob = new Blob([
       `<svg version="1.1"
@@ -32,10 +32,13 @@ export default function Home() {
             .replaceAll('<rect fill="none" height="24" width="24"/>', "")
             .replaceAll("<path", "<path fill='#ffffffaf' ")
             .replaceAll("<rect", "<rect fill='#ffffffaf'")
+            .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
             .replace(
-              new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/g),
+              new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
               ""
-            )}
+            )
+            .replaceAll("<g>", "")
+            .replaceAll("</g>", "")}
             
         </g>
         </svg>
@@ -95,8 +98,22 @@ export default function Home() {
                   <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
                 </Modal>
               </div>
+              <div className={styles.iconTypeSetting}>
+                <h2 htmlFor="icon_name">2. Select the icon type</h2>
+                <select
+                  type="text"
+                  onChange={(e) => setIconType(e.target.value)}
+                >
+                  <option value="materialiconstwotone">
+                    Two shade (default)
+                  </option>
+                  <option value="materialicons">Filled</option>
+                  <option value="materialiconsoutlined">Outline</option>
+                  <option value="materialiconsround">Rounded</option>
+                </select>
+              </div>
               <div className={styles.modifierSettings__iconNameSelect}>
-                <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
+                <h2 htmlFor="icon_name">3. Paste the copied icon name</h2>
 
                 {loading ? (
                   <div className={styles.loadingMsg}>
@@ -123,7 +140,7 @@ export default function Home() {
                 </form>
               </div>
               <div className={styles.modifierSettings__colorSelect}>
-                <h2>3. Select background color</h2>
+                <h2>4. Select background color</h2>
                 <SketchPicker
                   color={bgColor}
                   onChangeComplete={(color) => setBgColor(color)}
@@ -139,6 +156,7 @@ export default function Home() {
                   setSvg={setSvg}
                   setLoading={setLoading}
                   setVersionCount={setVersionCount}
+                  iconType={iconType}
                 />
               </div>
               <div className={styles.downloadBtnWraper}>
