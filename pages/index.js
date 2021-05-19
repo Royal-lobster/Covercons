@@ -148,7 +148,13 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.coverPreview}>
-              <h2>Live Preview</h2>
+              <h2>Live Preview {loading ? (
+                  <span className={styles.loadingMsg}>
+                    Loading: {versionCount}
+                  </span>
+                ) : (
+                  <></>
+                )}</h2>
               <div className="preview">
                 <SvgInline
                   icon={icon}
