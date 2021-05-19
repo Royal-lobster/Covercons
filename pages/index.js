@@ -16,6 +16,7 @@ export default function Home() {
   const [iconInputFieldText, setIconInputFieldText] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [versionCount, setVersionCount] = React.useState();
 
   const handleDownloadCover = () => {
     const blob = new Blob([
@@ -98,7 +99,9 @@ export default function Home() {
                 <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
 
                 {loading ? (
-                  <div className={styles.loadingMsg}>Loading...</div>
+                  <div className={styles.loadingMsg}>
+                    Loading: {versionCount}
+                  </div>
                 ) : (
                   <></>
                 )}
@@ -135,6 +138,7 @@ export default function Home() {
                   svg={svg}
                   setSvg={setSvg}
                   setLoading={setLoading}
+                  setVersionCount={setVersionCount}
                 />
               </div>
               <div className={styles.downloadBtnWraper}>
