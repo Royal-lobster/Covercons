@@ -30,7 +30,12 @@ export default function Home() {
             .substring(svg.indexOf(">") + 1, svg.length - 6)
             .replaceAll('<rect fill="none" height="24" width="24"/>', "")
             .replaceAll("<path", "<path fill='#ffffffaf' ")
-            .replaceAll("<rect", "<rect fill='#ffffffaf'")}
+            .replaceAll("<rect", "<rect fill='#ffffffaf'")
+            .replace(
+              new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/g),
+              ""
+            )}
+            
         </g>
         </svg>
         `,
