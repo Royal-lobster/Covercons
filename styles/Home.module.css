@@ -195,6 +195,7 @@
 .errorTextWrapper {
   text-align: center;
   color: white;
+  padding: 30px;
 }
 
 .errorTextWrapper h2 {
