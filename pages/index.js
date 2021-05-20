@@ -289,7 +289,9 @@ export default function Home() {
           </div>
         </main>
 
-        <footer className={styles.footer}>Made By Srujan with Nextjs</footer>
+        <footer className={styles.footer}>
+          Made By <a href="https://srujangurram.me"> Srujan</a>
+        </footer>
       </div>
     </>
   );

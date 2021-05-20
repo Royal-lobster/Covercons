@@ -17,7 +17,14 @@
   font-size: 18px;
   color: #222222;
 }
-
+.footer a {
+  color: #3369ff;
+  font-weight: bold;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #3369ff;
+  transform: translateY(1.5px);
+  margin: 0 5px;
+}
 .wrapper {
   display: flex;
   padding: 5rem 0;
