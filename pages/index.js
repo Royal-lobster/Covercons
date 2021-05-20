@@ -256,7 +256,13 @@ export default function Home() {
                   <div className={styles.iconPatternSetting}>
                     <h2>4.1 Select Spacing between Icons</h2>
                     <div className={styles.iconPaternSettingDisplayValue}>
-                      Spacing: {iconPatternSpacing}
+                      Spacing: {iconPatternSpacing}{" "}
+                      <span
+                        className={styles.defaultChanger}
+                        onClick={() => setIconPatternSpacing(20)}
+                      >
+                        {"("}default 20{")"}
+                      </span>
                     </div>
                     <input
                       type="range"
@@ -270,14 +276,20 @@ export default function Home() {
                   <div className={styles.iconPatternSetting}>
                     <h2>4.2 Select Icons size in Pattern</h2>
                     <div className={styles.iconPaternSettingDisplayValue}>
-                      Icon Size: {iconPatternSize}
+                      Icon Size: {iconPatternSize}{" "}
+                      <span
+                        className={styles.defaultChanger}
+                        onClick={() => setIconPatternSize(2)}
+                      >
+                        {"("}default 2{")"}
+                      </span>
                     </div>
                     <input
                       type="range"
                       name="icon_size"
                       value={iconPatternSize}
-                      min="2"
-                      max="10"
+                      min="1"
+                      max="30"
                       onChange={(e) => setIconPatternSize(e.target.value)}
                     ></input>
                   </div>
@@ -285,7 +297,13 @@ export default function Home() {
                   <div className={styles.iconPatternSetting}>
                     <h2>4.3 Select Rotation in Pattern</h2>
                     <div className={styles.iconPaternSettingDisplayValue}>
-                      Rotation : {iconPatternRotation}
+                      Rotation : {iconPatternRotation}{" "}
+                      <span
+                        className={styles.defaultChanger}
+                        onClick={() => setIconPatternRotation(330)}
+                      >
+                        {"("}default 330{")"}
+                      </span>
                     </div>
                     <input
                       type="range"

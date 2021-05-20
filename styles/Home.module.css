@@ -151,6 +151,12 @@
 .coverPreview {
   flex: 4;
 }
+.defaultChanger {
+  color: #3369ff;
+  cursor: pointer;
+  padding: 1px 0;
+  border-bottom: 1px solid #3369ff;
+}
 .downloadBtnWraper {
   display: flex;
   justify-content: center;
