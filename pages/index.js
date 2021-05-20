@@ -23,6 +23,7 @@ export default function Home() {
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
 
   React.useEffect(() => {
+    setErrorIconFetch(false);
     (async () => {
       let version = 15;
       while (version > 0) {
@@ -34,10 +35,10 @@ export default function Home() {
         );
         if (await response.ok) {
           setSvg(await response.text());
-          setErrorIconFetch(false);
           setLoading(false);
           version = -1;
         } else {
+          setErrorIconFetch(false);
           setLoading(true);
           setVersionCount(version);
           version--;
@@ -276,12 +277,13 @@ export default function Home() {
 
               <div className={styles.downloadBtnWraper}>
                 <a ref={downloadHelper_a_tag}></a>
-                <div
+                <button
                   className={styles.downloadBtn}
                   onClick={handleDownloadCover}
+                  disabled={errorIconFetch}
                 >
                   Download Cover
-                </div>
+                </button>
               </div>
             </div>
           </div>
