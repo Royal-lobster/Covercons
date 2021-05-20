@@ -21,7 +21,7 @@ export default function Home() {
   const [iconType, setIconType] = React.useState("materialiconstwotone");
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
-  const [iconPatternSpacing, setIconPatternSpacing] = React.useState(20);
+  const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
   const [iconPatternSize, setIconPatternSize] = React.useState(2);
   const [iconPatternRotation, setIconPatternRotation] = React.useState(330);
 
@@ -259,9 +259,9 @@ export default function Home() {
                       Spacing: {iconPatternSpacing}{" "}
                       <span
                         className={styles.defaultChanger}
-                        onClick={() => setIconPatternSpacing(20)}
+                        onClick={() => setIconPatternSpacing(25)}
                       >
-                        {"("}default 20{")"}
+                        {"("}default 25{")"}
                       </span>
                     </div>
                     <input
