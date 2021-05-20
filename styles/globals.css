@@ -21,11 +21,7 @@ a {
 * {
   box-sizing: border-box;
 }
-.preview svg {
-  width: 120px;
-  height: 120px;
-  filter: invert(1) opacity(90%);
-}
+
 .iconErrorDiv {
   padding: 10px;
   background-color: rgba(255, 0, 0, 0.479);
@@ -38,7 +34,7 @@ a {
   text-align: center;
   font-size: min(40px, 5vw);
   border-bottom: 1px solid #eee;
-  margin: 0 ;
+  margin: 0;
 }
 .iconErrorMessage {
   display: block;

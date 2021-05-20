@@ -70,12 +70,13 @@
   border-radius: 12px;
 }
 .modifierSettings__iconNameSelect input,
-.iconTypeSetting select{
+.iconTypeSetting select {
   background-color: #eee;
   border: 1px solid #c2c2c2;
   padding: 10px;
   border-radius: 8px;
   width: 100%;
+  appearance: none;
 }
 .iconNameSubmit {
   display: inline-block;
@@ -160,9 +161,40 @@
 .downloadBtn:active {
   top: 0.1em;
 }
-
+.loadingBar progress {
+  width: 90%;
+  margin-bottom: 10px;
+  height: 3px;
+}
 .loadingMsg {
   margin-bottom: 10px;
   color: #3369ff;
   padding: 3px;
+}
+.previewSvg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.previewSvg svg {
+  width: 100%;
+  height: auto !important;
+}
+.errorCover {
+  width: 100%;
+  height: 300px;
+  background-color: #ff6161;
+  display: grid;
+  place-items: center;
+}
+.errorTextWrapper {
+  text-align: center;
+  color: white;
+}
+
+.errorTextWrapper h2 {
+  font-weight: 900;
+  font-size: 30px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ca4343;
 }

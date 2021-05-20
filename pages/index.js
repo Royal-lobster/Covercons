@@ -3,9 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { SketchPicker } from "react-color";
-import SvgInline from "../lib/SvgInline";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import { shadeColor } from "../lib/shadeColor";
 
 export default function Home() {
   const downloadHelper_a_tag = React.useRef();
@@ -16,43 +16,110 @@ export default function Home() {
   const [iconInputFieldText, setIconInputFieldText] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [errorIconFetch, setErrorIconFetch] = React.useState(false);
   const [versionCount, setVersionCount] = React.useState();
   const [iconType, setIconType] = React.useState("materialiconstwotone");
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
+  const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
+
+  React.useEffect(() => {
+    (async () => {
+      let version = 15;
+      while (version > 0) {
+        console.log(
+          `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
+        );
+        let response = await fetch(
+          `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
+        );
+        if (await response.ok) {
+          setSvg(await response.text());
+          setErrorIconFetch(false);
+          setLoading(false);
+          version = -1;
+        } else {
+          setLoading(true);
+          setVersionCount(version);
+          version--;
+        }
+      }
+      if (version == 0) {
+        setLoading(false);
+        setSvg(null);
+        setErrorIconFetch(true);
+      }
+    })();
+  }, [icon, iconType]);
+  React.useEffect(() => {
+    if (coverType == "iconpattern" && svg) {
+      setGeneratedCoverSvg(`<svg version="1.1"
+      baseProfile="full"
+      width="1500" height="600"
+      viewbox="0 0 1500 600"
+      preserveAspectRatio="xMidYMid meet"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="${bgColor.hex}"/>
+      <rect width="100%" height="100%" fill="url(#pattern)"/>
+      <defs>
+        <pattern id="pattern" x="0" y="0" width="20" height="20" patternTransform="rotate(-20) scale(2)" patternUnits="userSpaceOnUse">
+          <g>
+            ${svg
+              .substring(svg.indexOf(">") + 1, svg.length - 6)
+              .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+              .replaceAll(
+                "<path",
+                `<path fill= "${shadeColor(bgColor.hex.substring(1), -25)}"`
+              )
+              .replaceAll(
+                "<rect",
+                `<rect fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+              )
+              .replaceAll(
+                "<polygon",
+                `<polygon fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+              )
+              .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
+              .replaceAll("<g>", "")
+              .replaceAll("</g>", "")}
+              
+          </g>
+      </pattern>
+    </defs>
+    </svg>
+      `);
+    } else if (coverType == "singlemiddleicon" && svg) {
+      setGeneratedCoverSvg(
+        `<svg version="1.1"
+      baseProfile="full"
+      viewbox="0 0 1500 600"
+      width="1500" height="600"
+      preserveAspectRatio="xMidYMid meet"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="${bgColor.hex}" />
+      <g transform="translate(610, 180) scale(10)" id="center_icon">
+        ${svg
+          .substring(svg.indexOf(">") + 1, svg.length - 6)
+          .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+          .replaceAll("<path", "<path fill='#ffffffaf' ")
+          .replaceAll("<rect", "<rect fill='#ffffffaf'")
+          .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
+          .replace(
+            new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
+            ""
+          )
+          .replaceAll("<g>", "")
+          .replaceAll("</g>", "")}
+          
+      </g>
+      </svg>
+      `
+      );
+    }
+  }, [bgColor, coverType, svg]);
 
   const handleDownloadCover = () => {
-    const patternBlob = new Blob([
-      `<svg version="1.1"
-        baseProfile="full"
-        width="1500" height="600"
-        xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="100%" fill="${bgColor.hex}"/>
-        <rect width="100%" height="100%" fill="url(#pattern)"/>
-        <defs>
-          <pattern id="pattern" x="0" y="0" width="20" height="20" patternTransform="rotate(-20) scale(2)" patternUnits="userSpaceOnUse">
-            <g>
-              ${svg
-                .substring(svg.indexOf(">") + 1, svg.length - 6)
-                .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-                .replaceAll("<path", "<path fill='#ffffffaf' ")
-                .replaceAll("<rect", "<rect fill='#ffffffaf'")
-                .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
-                .replace(
-                  new RegExp(
-                    /(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/
-                  ),
-                  ""
-                )
-                .replaceAll("<g>", "")
-                .replaceAll("</g>", "")}
-                
-            </g>
-        </pattern>
-      </defs>
-      </svg>
-        `,
-    ]);
-    downloadHelper_a_tag.current.download = `covercon_${icon}.svg`;
+    let blob = new Blob([generatedCoverSvg]);
+    downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.svg`;
     downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
     downloadHelper_a_tag.current.click();
   };
@@ -108,9 +175,21 @@ export default function Home() {
               </div>
               <div className={styles.iconTypeSetting}>
                 <h2 htmlFor="icon_name">2. Select the icon type</h2>
+                {loading ? (
+                  <div className={styles.loadingBar}>
+                    <progress
+                      id="file"
+                      value={`${15 - versionCount}`}
+                      max="15"
+                    ></progress>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <select
                   type="text"
                   onChange={(e) => setIconType(e.target.value)}
+                  disabled={loading}
                 >
                   <option value="materialiconstwotone">
                     Two shade (default)
@@ -124,8 +203,12 @@ export default function Home() {
                 <h2 htmlFor="icon_name">3. Paste the copied icon name</h2>
 
                 {loading ? (
-                  <div className={styles.loadingMsg}>
-                    Loading: {versionCount}
+                  <div className={styles.loadingBar}>
+                    <progress
+                      id="file"
+                      value={`${15 - versionCount}`}
+                      max="15"
+                    ></progress>
                   </div>
                 ) : (
                   <></>
@@ -148,21 +231,17 @@ export default function Home() {
                 </form>
               </div>
               <div className={styles.iconTypeSetting}>
-                <h2 htmlFor="icon_name">2. Select the icon type</h2>
+                <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
                 <select
                   type="text"
-                  onChange={(e) => setIconType(e.target.value)}
+                  onChange={(e) => setCoverType(e.target.value)}
                 >
-                  <option value="materialiconstwotone">
-                    Two shade (default)
-                  </option>
-                  <option value="materialicons">Filled</option>
-                  <option value="materialiconsoutlined">Outline</option>
-                  <option value="materialiconsround">Rounded</option>
+                  <option value="singlemiddleicon">Single Icon</option>
+                  <option value="iconpattern">Icon Pattern</option>
                 </select>
               </div>
               <div className={styles.modifierSettings__colorSelect}>
-                <h2>4. Select background color</h2>
+                <h2>5. Select background color</h2>
                 <SketchPicker
                   color={bgColor}
                   onChangeComplete={(color) => setBgColor(color)}
@@ -170,23 +249,31 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.coverPreview}>
-              <h2>Live Preview {loading ? (
+              <h2>
+                Live Preview{" "}
+                {loading ? (
                   <span className={styles.loadingMsg}>
                     Loading: {versionCount}
                   </span>
                 ) : (
                   <></>
-                )}</h2>
-              <div className="preview">
-                <SvgInline
-                  icon={icon}
-                  svg={svg}
-                  setSvg={setSvg}
-                  setLoading={setLoading}
-                  setVersionCount={setVersionCount}
-                  iconType={iconType}
+                )}
+              </h2>
+
+              {errorIconFetch ? (
+                <div className={styles.errorCover}>
+                  <div className={styles.errorTextWrapper}>
+                    <h2>Icon: "{icon}" not found </h2>
+                    <p>You may have copied the incorrect icon name</p>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={styles.previewSvg}
+                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
                 />
-              </div>
+              )}
+
               <div className={styles.downloadBtnWraper}>
                 <a ref={downloadHelper_a_tag}></a>
                 <div
@@ -202,26 +289,6 @@ export default function Home() {
 
         <footer className={styles.footer}>Made By Srujan with Nextjs</footer>
       </div>
-      <style jsx>
-        {`
-          .preview {
-            overflow: hidden;
-            display: grid;
-            place-content: center;
-            width: 100%;
-            height: 300px;
-            border-radius: 12px;
-            background: ${bgColor.hex};
-            box-shadow:
-              0 0px 2.2px rgba(0, 0, 0, 0.02),
-              0 0px 5.3px rgba(0, 0, 0, 0.028),
-              0 0px 10px rgba(0, 0, 0, 0.035),
-              0 0px 17.9px rgba(0, 0, 0, 0.042),
-              0 0px 33.4px rgba(0, 0, 0, 0.05),
-              0 0px 80px rgba(0, 0, 0, 0.07)
-            ;
-        `}
-      </style>
     </>
   );
 }
