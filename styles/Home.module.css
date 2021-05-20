@@ -33,6 +33,11 @@
   width: 90vw;
   gap: 20px;
 }
+@media screen and (max-width: 800px) {
+  .wrapper {
+    flex-direction: column;
+  }
+}
 .title {
   line-height: 1.15;
   font-size: min(50px, 15vw);
@@ -60,6 +65,9 @@
   flex: 2;
   max-width: 600px;
   margin: 0 auto;
+  height: 100vh;
+  overflow-y: scroll;
+  padding-right: 20px;
 }
 .modifierSettings h2 {
   border-bottom: 1px solid #c2c2c2;
@@ -68,7 +76,8 @@
 .modifierSettings__iconNameSelect,
 .modifierSettings__colorSelect,
 .selectIconsFromGoogle,
-.iconTypeSetting {
+.iconTypeSetting,
+.iconPatternSetting {
   margin-bottom: 30px;
   text-align: center;
   color: #3d3d3d;
@@ -135,6 +144,9 @@
     0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
     0 22.3px 17.9px rgba(0, 0, 0, 0.042), 0 41.8px 33.4px rgba(0, 0, 0, 0.05),
     0 100px 80px rgba(0, 0, 0, 0.07);
+}
+.iconPatternSetting input {
+  width: 100%;
 }
 .coverPreview {
   flex: 4;

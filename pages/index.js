@@ -21,6 +21,9 @@ export default function Home() {
   const [iconType, setIconType] = React.useState("materialiconstwotone");
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
+  const [iconPatternSpacing, setIconPatternSpacing] = React.useState(20);
+  const [iconPatternSize, setIconPatternSize] = React.useState(2);
+  const [iconPatternRotation, setIconPatternRotation] = React.useState(330);
 
   React.useEffect(() => {
     setErrorIconFetch(false);
@@ -62,7 +65,7 @@ export default function Home() {
       <rect width="100%" height="100%" fill="${bgColor.hex}"/>
       <rect width="100%" height="100%" fill="url(#pattern)"/>
       <defs>
-        <pattern id="pattern" x="0" y="0" width="20" height="20" patternTransform="rotate(-20) scale(2)" patternUnits="userSpaceOnUse">
+        <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
           <g>
             ${svg
               .substring(svg.indexOf(">") + 1, svg.length - 6)
@@ -116,7 +119,14 @@ export default function Home() {
       `
       );
     }
-  }, [bgColor, coverType, svg]);
+  }, [
+    bgColor,
+    coverType,
+    svg,
+    iconPatternSpacing,
+    iconPatternSize,
+    iconPatternRotation,
+  ]);
 
   const handleDownloadCover = () => {
     let blob = new Blob([generatedCoverSvg]);
@@ -241,6 +251,55 @@ export default function Home() {
                   <option value="iconpattern">Icon Pattern</option>
                 </select>
               </div>
+              {coverType == "iconpattern" ? (
+                <>
+                  <div className={styles.iconPatternSetting}>
+                    <h2>4.1 Select Spacing between Icons</h2>
+                    <div className={styles.iconPaternSettingDisplayValue}>
+                      Spacing: {iconPatternSpacing}
+                    </div>
+                    <input
+                      type="range"
+                      name="icon_spacing"
+                      value={iconPatternSpacing}
+                      min="20"
+                      max="80"
+                      onChange={(e) => setIconPatternSpacing(e.target.value)}
+                    ></input>
+                  </div>
+                  <div className={styles.iconPatternSetting}>
+                    <h2>4.2 Select Icons size in Pattern</h2>
+                    <div className={styles.iconPaternSettingDisplayValue}>
+                      Icon Size: {iconPatternSize}
+                    </div>
+                    <input
+                      type="range"
+                      name="icon_size"
+                      value={iconPatternSize}
+                      min="2"
+                      max="10"
+                      onChange={(e) => setIconPatternSize(e.target.value)}
+                    ></input>
+                  </div>
+
+                  <div className={styles.iconPatternSetting}>
+                    <h2>4.3 Select Rotation in Pattern</h2>
+                    <div className={styles.iconPaternSettingDisplayValue}>
+                      Rotation : {iconPatternRotation}
+                    </div>
+                    <input
+                      type="range"
+                      name="icon_size"
+                      value={iconPatternRotation}
+                      min="0"
+                      max="360"
+                      onChange={(e) => setIconPatternRotation(e.target.value)}
+                    ></input>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>5. Select background color</h2>
                 <SketchPicker
