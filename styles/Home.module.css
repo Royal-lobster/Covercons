@@ -69,7 +69,8 @@
   border: 2px solid #eee;
   border-radius: 12px;
 }
-.modifierSettings__iconNameSelect input {
+.modifierSettings__iconNameSelect input,
+.iconTypeSetting select{
   background-color: #eee;
   border: 1px solid #c2c2c2;
   padding: 10px;
