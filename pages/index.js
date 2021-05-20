@@ -18,30 +18,38 @@ export default function Home() {
   const [loading, setLoading] = React.useState(false);
   const [versionCount, setVersionCount] = React.useState();
   const [iconType, setIconType] = React.useState("materialiconstwotone");
+  const [coverType, setCoverType] = React.useState("singlemiddleicon");
+
   const handleDownloadCover = () => {
-    const blob = new Blob([
+    const patternBlob = new Blob([
       `<svg version="1.1"
         baseProfile="full"
         width="1500" height="600"
         xmlns="http://www.w3.org/2000/svg">
-
-        <rect width="100%" height="100%" fill="${bgColor.hex}" />
-        <g transform="translate(610, 180) scale(10)">
-          ${svg
-            .substring(svg.indexOf(">") + 1, svg.length - 6)
-            .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-            .replaceAll("<path", "<path fill='#ffffffaf' ")
-            .replaceAll("<rect", "<rect fill='#ffffffaf'")
-            .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
-            .replace(
-              new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
-              ""
-            )
-            .replaceAll("<g>", "")
-            .replaceAll("</g>", "")}
-            
-        </g>
-        </svg>
+        <rect width="100%" height="100%" fill="${bgColor.hex}"/>
+        <rect width="100%" height="100%" fill="url(#pattern)"/>
+        <defs>
+          <pattern id="pattern" x="0" y="0" width="20" height="20" patternTransform="rotate(-20) scale(2)" patternUnits="userSpaceOnUse">
+            <g>
+              ${svg
+                .substring(svg.indexOf(">") + 1, svg.length - 6)
+                .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+                .replaceAll("<path", "<path fill='#ffffffaf' ")
+                .replaceAll("<rect", "<rect fill='#ffffffaf'")
+                .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
+                .replace(
+                  new RegExp(
+                    /(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/
+                  ),
+                  ""
+                )
+                .replaceAll("<g>", "")
+                .replaceAll("</g>", "")}
+                
+            </g>
+        </pattern>
+      </defs>
+      </svg>
         `,
     ]);
     downloadHelper_a_tag.current.download = `covercon_${icon}.svg`;
@@ -138,6 +146,20 @@ export default function Home() {
 
                   <button className={styles.iconNameSubmit}>Submit</button>
                 </form>
+              </div>
+              <div className={styles.iconTypeSetting}>
+                <h2 htmlFor="icon_name">2. Select the icon type</h2>
+                <select
+                  type="text"
+                  onChange={(e) => setIconType(e.target.value)}
+                >
+                  <option value="materialiconstwotone">
+                    Two shade (default)
+                  </option>
+                  <option value="materialicons">Filled</option>
+                  <option value="materialiconsoutlined">Outline</option>
+                  <option value="materialiconsround">Rounded</option>
+                </select>
               </div>
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>4. Select background color</h2>
