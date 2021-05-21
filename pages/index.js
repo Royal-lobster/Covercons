@@ -2,14 +2,21 @@ import React from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { SketchPicker } from "react-color";
+import {
+  ChromePicker,
+  CirclePicker,
+  GithubPicker,
+  SketchPicker,
+} from "react-color";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
+import useWindowSize from "../lib/winsizehook";
 
 export default function Home() {
   const downloadHelper_a_tag = React.useRef();
 
+  const [width] = useWindowSize();
   const [svg, setSvg] = React.useState(null);
   const [bgColor, setBgColor] = React.useState({ hex: "#0394e6" });
   const [icon, setIcon] = React.useState("home");
@@ -24,6 +31,8 @@ export default function Home() {
   const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
   const [iconPatternSize, setIconPatternSize] = React.useState(2);
   const [iconPatternRotation, setIconPatternRotation] = React.useState(330);
+  const [iconPatternShade, setIconPatternShade] = React.useState(-25);
+  const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
   const iconColor = React.useMemo(() => {
       const color = '' + bgColor.hex;
@@ -41,9 +50,6 @@ export default function Home() {
     (async () => {
       let version = 15;
       while (version > 0) {
-        console.log(
-          `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
-        );
         let response = await fetch(
           `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
         );
@@ -83,20 +89,28 @@ export default function Home() {
               .replaceAll('<rect fill="none" height="24" width="24"/>', "")
               .replaceAll(
                 "<path",
-                `<path fill= "${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<path fill= "${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replaceAll(
                 "<rect",
-                `<rect fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<rect fill="${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replaceAll(
                 "<polygon",
-                `<polygon fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<polygon fill="${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
               .replaceAll("<g>", "")
               .replaceAll("</g>", "")}
-              
           </g>
       </pattern>
     </defs>
@@ -141,6 +155,7 @@ export default function Home() {
     iconPatternSpacing,
     iconPatternSize,
     iconPatternRotation,
+    iconPatternShade,
   ]);
 
   const handleDownloadCover = () => {
@@ -151,6 +166,38 @@ export default function Home() {
   };
   return (
     <>
+      <Head>
+        {/* <!-- HTML Meta Tags --> */}
+        <title>Notion Covercons</title>
+        <meta name="description" content="Generate Beautiful Notion Covers" />
+        <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content="https://covercons.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Notion Covercons" />
+        <meta
+          property="og:description"
+          content="Generate Beautiful Notion Covers"
+        />
+        <meta
+          property="og:image"
+          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
+        />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="covercons.vercel.app" />
+        <meta property="twitter:url" content="https://covercons.vercel.app/" />
+        <meta name="twitter:title" content="Notion Covercons" />
+        <meta
+          name="twitter:description"
+          content="Generate Beautiful Notion Covers"
+        />
+        <meta
+          name="twitter:image"
+          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
+        />
+      </Head>
       <div className={styles.container}>
         <Head>
           <title>Notion Covercons</title>
@@ -160,6 +207,31 @@ export default function Home() {
 
         <main className={styles.main}>
           <h1 className={styles.title}>Notion Covercons</h1>
+          {width < 790 ? (
+            <div className={styles.mobilePreviewBox}>
+              <div className={styles.previewLoading}>
+                {loading ? <p>loading - {versionCount}</p> : <></>}
+              </div>
+
+              {errorIconFetch ? (
+                <div
+                  className={`${styles.errorCover} ${styles.mobileErrorCover}`}
+                >
+                  <div className={styles.errorTextWrapper}>
+                    <h2>Icon: "{icon}" not found </h2>
+                    <p>You may have copied the incorrect icon name</p>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={styles.previewSvg}
+                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                />
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
           <div className={styles.wrapper}>
             <div className={styles.modifierSettings}>
               <div className={styles.selectIconsFromGoogle}>
@@ -199,34 +271,9 @@ export default function Home() {
                   <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
                 </Modal>
               </div>
-              <div className={styles.iconTypeSetting}>
-                <h2 htmlFor="icon_name">2. Select the icon type</h2>
-                {loading ? (
-                  <div className={styles.loadingBar}>
-                    <progress
-                      id="file"
-                      value={`${15 - versionCount}`}
-                      max="15"
-                    ></progress>
-                  </div>
-                ) : (
-                  <></>
-                )}
-                <select
-                  type="text"
-                  onChange={(e) => setIconType(e.target.value)}
-                  disabled={loading}
-                >
-                  <option value="materialiconstwotone">
-                    Two shade (default)
-                  </option>
-                  <option value="materialicons">Filled</option>
-                  <option value="materialiconsoutlined">Outline</option>
-                  <option value="materialiconsround">Rounded</option>
-                </select>
-              </div>
+
               <div className={styles.modifierSettings__iconNameSelect}>
-                <h2 htmlFor="icon_name">3. Paste the copied icon name</h2>
+                <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
 
                 {loading ? (
                   <div className={styles.loadingBar}>
@@ -257,16 +304,60 @@ export default function Home() {
                 </form>
               </div>
               <div className={styles.iconTypeSetting}>
+                <h2 htmlFor="icon_name">3. Select the icon type</h2>
+                {loading ? (
+                  <div className={styles.loadingBar}>
+                    <progress
+                      id="file"
+                      value={`${15 - versionCount}`}
+                      max="15"
+                    ></progress>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <select
+                  type="text"
+                  onChange={(e) => setIconType(e.target.value)}
+                  disabled={loading}
+                >
+                  <option value="materialiconstwotone">
+                    Two shade (default)
+                  </option>
+                  <option value="materialicons">Filled</option>
+                  <option value="materialiconsoutlined">Outline</option>
+                  <option value="materialiconsround">Rounded</option>
+                </select>
+              </div>
+              <div className={styles.iconTypeSetting}>
                 <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
                 <select
                   type="text"
+                  value={coverType}
                   onChange={(e) => setCoverType(e.target.value)}
                 >
                   <option value="singlemiddleicon">Single Icon</option>
                   <option value="iconpattern">Icon Pattern</option>
                 </select>
+                {coverType == "iconpattern" ? (
+                  <div className={styles.advancedSettingsBtn}>
+                    <p>Show Advanced Settings</p>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        defaultChecked={showAdvancedSettings}
+                        onChange={(e) => {
+                          setShowAdvancedSettings(e.target.checked);
+                        }}
+                      />
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
-              {coverType == "iconpattern" ? (
+              {coverType == "iconpattern" && showAdvancedSettings ? (
                 <>
                   <div className={styles.iconPatternSetting}>
                     <h2>4.1 Select Spacing between Icons</h2>
@@ -308,7 +399,6 @@ export default function Home() {
                       onChange={(e) => setIconPatternSize(e.target.value)}
                     ></input>
                   </div>
-
                   <div className={styles.iconPatternSetting}>
                     <h2>4.3 Select Rotation in Pattern</h2>
                     <div className={styles.iconPaternSettingDisplayValue}>
@@ -328,6 +418,16 @@ export default function Home() {
                       max="360"
                       onChange={(e) => setIconPatternRotation(e.target.value)}
                     ></input>
+                  </div>{" "}
+                  <div className={styles.iconPatternSetting}>
+                    <h2>4.4 Select icon shade in Pattern</h2>
+                    <select
+                      type="text"
+                      onChange={(e) => setIconPatternShade(e.target.value)}
+                    >
+                      <option value={-25}>Dark (default)</option>
+                      <option value={28}>Light</option>
+                    </select>
                   </div>
                 </>
               ) : (
@@ -335,37 +435,56 @@ export default function Home() {
               )}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>5. Select background color</h2>
-                <SketchPicker
+                <ChromePicker
                   color={bgColor}
                   onChangeComplete={(color) => setBgColor(color)}
+                />
+                <p className={styles.notionColours}>Notion Colours</p>
+                <CirclePicker
+                  color={bgColor}
+                  onChangeComplete={(color) => setBgColor(color)}
+                  className={styles.circlePicker}
+                  colors={[
+                    "#9B9A97",
+                    "#64473A",
+                    "#D9730D",
+                    "#DFAB01",
+                    "#0F7B6C",
+                    "#0B6E99",
+                    "#6940A5",
+                    "#AD1A72",
+                    "#E03E3E",
+                  ]}
                 />
               </div>
             </div>
             <div className={styles.coverPreview}>
-              <h2>
-                Live Preview{" "}
-                {loading ? (
-                  <span className={styles.loadingMsg}>
-                    Loading: {versionCount}
-                  </span>
-                ) : (
-                  <></>
-                )}
-              </h2>
+              <div className={styles.previewBox}>
+                <h2>
+                  Live Preview{" "}
+                  {loading ? (
+                    <span className={styles.loadingMsg}>
+                      Loading: {versionCount}
+                    </span>
+                  ) : (
+                    <></>
+                  )}
+                </h2>
 
-              {errorIconFetch ? (
-                <div className={styles.errorCover}>
-                  <div className={styles.errorTextWrapper}>
-                    <h2>Icon: "{icon}" not found </h2>
-                    <p>You may have copied the incorrect icon name</p>
+                {errorIconFetch ? (
+                  <div className={styles.errorCover}>
+                    <div className={styles.errorTextWrapper}>
+                      <h2>Icon: "{icon}" not found </h2>
+                      <p>You may have copied the incorrect icon name</p>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div
-                  className={styles.previewSvg}
-                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-                />
-              )}
+                ) : (
+                  <div
+                    className={styles.previewSvg}
+                    dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                  />
+                )}
+              </div>
 
               <div className={styles.downloadBtnWraper}>
                 <a ref={downloadHelper_a_tag}></a>
