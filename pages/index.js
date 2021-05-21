@@ -11,10 +11,12 @@ import {
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
+import useWindowSize from "../lib/winsizehook";
 
 export default function Home() {
   const downloadHelper_a_tag = React.useRef();
 
+  const [width] = useWindowSize();
   const [svg, setSvg] = React.useState(null);
   const [bgColor, setBgColor] = React.useState({ hex: "#0394e6" });
   const [icon, setIcon] = React.useState("home");
@@ -194,27 +196,31 @@ export default function Home() {
 
         <main className={styles.main}>
           <h1 className={styles.title}>Notion Covercons</h1>
-          <div className={styles.mobilePreviewBox}>
-            <div className={styles.previewLoading}>
-              {loading ? <p>loading - {versionCount}</p> : <></>}
-            </div>
-
-            {errorIconFetch ? (
-              <div
-                className={`${styles.errorCover} ${styles.mobileErrorCover}`}
-              >
-                <div className={styles.errorTextWrapper}>
-                  <h2>Icon: "{icon}" not found </h2>
-                  <p>You may have copied the incorrect icon name</p>
-                </div>
+          {width < 790 ? (
+            <div className={styles.mobilePreviewBox}>
+              <div className={styles.previewLoading}>
+                {loading ? <p>loading - {versionCount}</p> : <></>}
               </div>
-            ) : (
-              <div
-                className={styles.previewSvg}
-                dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-              />
-            )}
-          </div>
+
+              {errorIconFetch ? (
+                <div
+                  className={`${styles.errorCover} ${styles.mobileErrorCover}`}
+                >
+                  <div className={styles.errorTextWrapper}>
+                    <h2>Icon: "{icon}" not found </h2>
+                    <p>You may have copied the incorrect icon name</p>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={styles.previewSvg}
+                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                />
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
           <div className={styles.wrapper}>
             <div className={styles.modifierSettings}>
               <div className={styles.selectIconsFromGoogle}>
