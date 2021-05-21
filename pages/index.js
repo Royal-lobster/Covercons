@@ -39,9 +39,6 @@ export default function Home() {
     (async () => {
       let version = 15;
       while (version > 0) {
-        console.log(
-          `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
-        );
         let response = await fetch(
           `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
         );
@@ -329,13 +326,12 @@ export default function Home() {
                 {coverType == "iconpattern" ? (
                   <div className={styles.advancedSettingsBtn}>
                     <p>Show Advanced Settings</p>
-                    <label class="switch">
+                    <label className="switch">
                       <input
                         type="checkbox"
-                        value={showAdvancedSettings}
-                        onChange={() => {
-                          setShowAdvancedSettings(!showAdvancedSettings);
-                          console.log(showAdvancedSettings);
+                        defaultChecked={showAdvancedSettings}
+                        onChange={(e) => {
+                          setShowAdvancedSettings(e.target.checked);
                         }}
                       />
                       <span class="slider round"></span>
