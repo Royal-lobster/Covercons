@@ -27,7 +27,7 @@
 }
 .wrapper {
   display: flex;
-  padding: 5rem 0;
+  padding: 20px 0;
   flex-wrap: wrap;
   justify-content: space-around;
   width: 90vw;
@@ -48,7 +48,7 @@
   margin-top: 0;
   padding: min(10vh, 200px) 0;
   color: white;
-  width: 100vw;
+  width: 100%;
   margin-bottom: min(40px, 1vh);
 }
 
@@ -63,11 +63,9 @@
 }
 .modifierSettings {
   flex: 2;
+  padding-top: 20px;
   max-width: 600px;
   margin: 0 auto;
-  height: 100vh;
-  overflow-y: scroll;
-  padding-right: 20px;
 }
 .modifierSettings h2 {
   border-bottom: 1px solid #c2c2c2;
@@ -150,6 +148,17 @@
 }
 .coverPreview {
   flex: 4;
+  padding-top: 20px;
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+}
+.previewBox {
+  min-width: 100%;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 15px;
 }
 .defaultChanger {
   color: #3369ff;

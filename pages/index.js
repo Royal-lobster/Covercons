@@ -349,30 +349,32 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.coverPreview}>
-              <h2>
-                Live Preview{" "}
-                {loading ? (
-                  <span className={styles.loadingMsg}>
-                    Loading: {versionCount}
-                  </span>
-                ) : (
-                  <></>
-                )}
-              </h2>
+              <div className={styles.previewBox}>
+                <h2>
+                  Live Preview{" "}
+                  {loading ? (
+                    <span className={styles.loadingMsg}>
+                      Loading: {versionCount}
+                    </span>
+                  ) : (
+                    <></>
+                  )}
+                </h2>
 
-              {errorIconFetch ? (
-                <div className={styles.errorCover}>
-                  <div className={styles.errorTextWrapper}>
-                    <h2>Icon: "{icon}" not found </h2>
-                    <p>You may have copied the incorrect icon name</p>
+                {errorIconFetch ? (
+                  <div className={styles.errorCover}>
+                    <div className={styles.errorTextWrapper}>
+                      <h2>Icon: "{icon}" not found </h2>
+                      <p>You may have copied the incorrect icon name</p>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div
-                  className={styles.previewSvg}
-                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-                />
-              )}
+                ) : (
+                  <div
+                    className={styles.previewSvg}
+                    dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                  />
+                )}
+              </div>
 
               <div className={styles.downloadBtnWraper}>
                 <a ref={downloadHelper_a_tag}></a>
