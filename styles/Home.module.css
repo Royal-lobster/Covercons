@@ -266,8 +266,8 @@
     padding: 18px;
     font-weight: 600;
     color: #eee;
-    background-color: #2f3437;
-    border-bottom: 5px solid #222;
+    background-color: #222;
+    border-bottom: 5px solid #000000;
     z-index: 99;
     background-image: none;
   }
@@ -315,9 +315,9 @@
     width: 90vw;
   }
   .footer {
-    background-color: #2f3437;
+    background-color: #222;
     color: #eee;
-    border-top: 5px solid #222;
+    border-top: 5px solid #000;
     font-size: 18px;
   }
   .footer a {
