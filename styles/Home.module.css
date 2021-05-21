@@ -86,7 +86,7 @@
   width: 100%;
   appearance: none;
 }
-.modifierSettings__iconNameSelect input:focus{
+.modifierSettings__iconNameSelect input:focus {
   outline: none;
   border: 1px solid #979797;
 }
@@ -271,10 +271,9 @@
     padding: 18px;
     font-weight: 600;
     color: #eee;
-    background-color: #222;
-    border-bottom: 5px solid #000000;
+    background-color: #222222;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='12' viewBox='0 0 20 12'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='charlie-brown' fill='%236c6c6c' fill-opacity='0.4'%3E%3Cpath d='M9.8 12L0 2.2V.8l10 10 10-10v1.4L10.2 12h-.4zm-4 0L0 6.2V4.8L7.2 12H5.8zm8.4 0L20 6.2V4.8L12.8 12h1.4zM9.8 0l.2.2.2-.2h-.4zm-4 0L10 4.2 14.2 0h-1.4L10 2.8 7.2 0H5.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     z-index: 99;
-    background-image: none;
   }
   .previewBox {
     display: none;
@@ -301,8 +300,14 @@
     display: block;
     width: 100%;
     position: sticky;
-    top: 64px;
+    top: 59px;
     z-index: 99;
+    box-shadow: 0 0.4px 0.9px rgba(0, 0, 0, 0.015),
+      0 0.9px 2.1px rgba(0, 0, 0, 0.022), 0 1.5px 3.5px rgba(0, 0, 0, 0.027),
+      0 2.3px 5.2px rgba(0, 0, 0, 0.031), 0 3.3px 7.5px rgba(0, 0, 0, 0.035),
+      0 4.6px 10.6px rgba(0, 0, 0, 0.039), 0 6.5px 15.1px rgba(0, 0, 0, 0.043),
+      0 9.5px 21.9px rgba(0, 0, 0, 0.048), 0 14.6px 33.8px rgba(0, 0, 0, 0.055),
+      0 26px 60px rgba(0, 0, 0, 0.07);
   }
   .errorTextWrapper {
     padding: 0;
@@ -315,17 +320,20 @@
   }
   .coverPreview {
     margin: 0 auto !important;
+    padding-top: 0;
   }
   .downloadBtnWraper {
     width: 90vw;
+    margin-top: 0;
   }
   .footer {
-    background-color: #222;
     color: #eee;
-    border-top: 5px solid #000;
+    background-color: #222222;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='12' viewBox='0 0 20 12'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='charlie-brown' fill='%236c6c6c' fill-opacity='0.4'%3E%3Cpath d='M9.8 12L0 2.2V.8l10 10 10-10v1.4L10.2 12h-.4zm-4 0L0 6.2V4.8L7.2 12H5.8zm8.4 0L20 6.2V4.8L12.8 12h1.4zM9.8 0l.2.2.2-.2h-.4zm-4 0L10 4.2 14.2 0h-1.4L10 2.8 7.2 0H5.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     font-size: 18px;
   }
   .footer a {
-    color: #0394e6;
+    color: #34b5ff;
+    border-bottom: 1px solid #34b5ff;
   }
 }
