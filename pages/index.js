@@ -29,6 +29,8 @@ export default function Home() {
   const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
   const [iconPatternSize, setIconPatternSize] = React.useState(2);
   const [iconPatternRotation, setIconPatternRotation] = React.useState(330);
+  const [iconPatternShade, setIconPatternShade] = React.useState(-25);
+  const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
   React.useEffect(() => {
     setErrorIconFetch(false);
@@ -77,15 +79,24 @@ export default function Home() {
               .replaceAll('<rect fill="none" height="24" width="24"/>', "")
               .replaceAll(
                 "<path",
-                `<path fill= "${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<path fill= "${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replaceAll(
                 "<rect",
-                `<rect fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<rect fill="${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replaceAll(
                 "<polygon",
-                `<polygon fill="${shadeColor(bgColor.hex.substring(1), -25)}"`
+                `<polygon fill="${shadeColor(
+                  bgColor.hex.substring(1),
+                  parseInt(iconPatternShade)
+                )}"`
               )
               .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
               .replaceAll("<g>", "")
@@ -131,6 +142,7 @@ export default function Home() {
     iconPatternSpacing,
     iconPatternSize,
     iconPatternRotation,
+    iconPatternShade,
   ]);
 
   const handleDownloadCover = () => {
@@ -255,8 +267,26 @@ export default function Home() {
                   <option value="singlemiddleicon">Single Icon</option>
                   <option value="iconpattern">Icon Pattern</option>
                 </select>
+                {coverType == "iconpattern" ? (
+                  <div className={styles.advancedSettingsBtn}>
+                    <p>Show Advanced Settings</p>
+                    <label class="switch">
+                      <input
+                        type="checkbox"
+                        value={showAdvancedSettings}
+                        onChange={() => {
+                          setShowAdvancedSettings(!showAdvancedSettings);
+                          console.log(showAdvancedSettings);
+                        }}
+                      />
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
-              {coverType == "iconpattern" ? (
+              {coverType == "iconpattern" && showAdvancedSettings ? (
                 <>
                   <div className={styles.iconPatternSetting}>
                     <h2>4.1 Select Spacing between Icons</h2>
@@ -298,7 +328,6 @@ export default function Home() {
                       onChange={(e) => setIconPatternSize(e.target.value)}
                     ></input>
                   </div>
-
                   <div className={styles.iconPatternSetting}>
                     <h2>4.3 Select Rotation in Pattern</h2>
                     <div className={styles.iconPaternSettingDisplayValue}>
@@ -318,6 +347,16 @@ export default function Home() {
                       max="360"
                       onChange={(e) => setIconPatternRotation(e.target.value)}
                     ></input>
+                  </div>{" "}
+                  <div className={styles.iconPatternSetting}>
+                    <h2>4.4 Select icon shade in Pattern</h2>
+                    <select
+                      type="text"
+                      onChange={(e) => setIconPatternShade(e.target.value)}
+                    >
+                      <option value={-25}>Dark (default)</option>
+                      <option value={28}>Light</option>
+                    </select>
                   </div>
                 </>
               ) : (

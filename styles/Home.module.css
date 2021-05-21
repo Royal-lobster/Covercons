@@ -84,7 +84,8 @@
   border-radius: 12px;
 }
 .modifierSettings__iconNameSelect input,
-.iconTypeSetting select {
+.iconTypeSetting select,
+.iconPatternSetting select {
   background-color: #eee;
   border: 1px solid #c2c2c2;
   padding: 10px;
@@ -145,6 +146,19 @@
 }
 .iconPatternSetting input {
   width: 100%;
+}
+.advancedSettingsBtn {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+.advancedSettingsBtn p {
+  font-size: 18px;
 }
 .coverPreview {
   flex: 4;
