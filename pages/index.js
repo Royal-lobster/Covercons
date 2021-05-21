@@ -318,6 +318,7 @@ export default function Home() {
                 <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
                 <select
                   type="text"
+                  value={coverType}
                   onChange={(e) => setCoverType(e.target.value)}
                 >
                   <option value="singlemiddleicon">Single Icon</option>
