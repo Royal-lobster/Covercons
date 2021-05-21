@@ -257,34 +257,9 @@ export default function Home() {
                   <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
                 </Modal>
               </div>
-              <div className={styles.iconTypeSetting}>
-                <h2 htmlFor="icon_name">2. Select the icon type</h2>
-                {loading ? (
-                  <div className={styles.loadingBar}>
-                    <progress
-                      id="file"
-                      value={`${15 - versionCount}`}
-                      max="15"
-                    ></progress>
-                  </div>
-                ) : (
-                  <></>
-                )}
-                <select
-                  type="text"
-                  onChange={(e) => setIconType(e.target.value)}
-                  disabled={loading}
-                >
-                  <option value="materialiconstwotone">
-                    Two shade (default)
-                  </option>
-                  <option value="materialicons">Filled</option>
-                  <option value="materialiconsoutlined">Outline</option>
-                  <option value="materialiconsround">Rounded</option>
-                </select>
-              </div>
+
               <div className={styles.modifierSettings__iconNameSelect}>
-                <h2 htmlFor="icon_name">3. Paste the copied icon name</h2>
+                <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
 
                 {loading ? (
                   <div className={styles.loadingBar}>
@@ -313,6 +288,32 @@ export default function Home() {
 
                   <button className={styles.iconNameSubmit}>Submit</button>
                 </form>
+              </div>
+              <div className={styles.iconTypeSetting}>
+                <h2 htmlFor="icon_name">3. Select the icon type</h2>
+                {loading ? (
+                  <div className={styles.loadingBar}>
+                    <progress
+                      id="file"
+                      value={`${15 - versionCount}`}
+                      max="15"
+                    ></progress>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <select
+                  type="text"
+                  onChange={(e) => setIconType(e.target.value)}
+                  disabled={loading}
+                >
+                  <option value="materialiconstwotone">
+                    Two shade (default)
+                  </option>
+                  <option value="materialicons">Filled</option>
+                  <option value="materialiconsoutlined">Outline</option>
+                  <option value="materialiconsround">Rounded</option>
+                </select>
               </div>
               <div className={styles.iconTypeSetting}>
                 <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
