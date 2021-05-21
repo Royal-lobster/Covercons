@@ -194,6 +194,34 @@ export default function Home() {
 
         <main className={styles.main}>
           <h1 className={styles.title}>Notion Covercons</h1>
+          <div className={styles.mobilePreviewBox}>
+            <h2 className={styles.mobilePreviewTitle}>
+              Live Preview{" "}
+              {loading ? (
+                <span className={styles.loadingMsg}>
+                  Loading: {versionCount}
+                </span>
+              ) : (
+                <></>
+              )}
+            </h2>
+
+            {errorIconFetch ? (
+              <div
+                className={`${styles.errorCover} ${styles.mobileErrorCover}`}
+              >
+                <div className={styles.errorTextWrapper}>
+                  <h2>Icon: "{icon}" not found </h2>
+                  <p>You may have copied the incorrect icon name</p>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={styles.previewSvg}
+                dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+              />
+            )}
+          </div>
           <div className={styles.wrapper}>
             <div className={styles.modifierSettings}>
               <div className={styles.selectIconsFromGoogle}>
