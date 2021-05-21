@@ -100,7 +100,6 @@ export default function Home() {
               .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
               .replaceAll("<g>", "")
               .replaceAll("</g>", "")}
-              
           </g>
       </pattern>
     </defs>
@@ -128,7 +127,6 @@ export default function Home() {
           )
           .replaceAll("<g>", "")
           .replaceAll("</g>", "")}
-          
       </g>
       </svg>
       `
