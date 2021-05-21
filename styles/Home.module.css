@@ -86,6 +86,10 @@
   width: 100%;
   appearance: none;
 }
+.modifierSettings__iconNameSelect input:focus{
+  outline: none;
+  border: 1px solid #979797;
+}
 .iconNameSubmit {
   display: inline-block;
   cursor: pointer;
