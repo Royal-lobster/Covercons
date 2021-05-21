@@ -14,15 +14,15 @@
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 22px;
   color: #222222;
 }
 .footer a {
   color: #3369ff;
-  font-weight: bold;
+  font-weight: 600;
   padding-bottom: 3px;
   border-bottom: 1px solid #3369ff;
-  transform: translateY(1.5px);
+  transform: translateY(2px);
   margin: 0 5px;
 }
 .wrapper {
@@ -263,33 +263,64 @@
     font-size: 20px;
     position: sticky;
     top: 0;
-    padding: 20px;
+    padding: 18px;
     font-weight: 600;
     color: #eee;
     background-color: #2f3437;
-    z-index: 999;
+    border-bottom: 5px solid #222;
+    z-index: 99;
     background-image: none;
   }
   .previewBox {
     display: none;
   }
+  .previewLoading {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    z-index: 999;
+  }
+  .previewLoading p {
+    margin: 0 auto;
+    display: inline-block;
+    background-color: #222222;
+    color: #ffffff;
+    margin-top: 20px;
+    font-weight: 900;
+    padding: 5px 10px;
+    border-radius: 90px;
+  }
   .mobilePreviewBox {
     display: block;
     width: 100%;
     position: sticky;
-    top: 63px;
-    z-index: 999;
+    top: 64px;
+    z-index: 99;
   }
-  .mobilePreviewBox .mobilePreviewTitle {
-    display: none;
+  .errorTextWrapper {
+    padding: 0;
   }
   .mobileErrorCover {
-    height: 200px !important;
+    height: 150px !important;
+  }
+  .mobileErrorCover h1 {
+    font-size: 20px;
   }
   .coverPreview {
     margin: 0 auto !important;
   }
   .downloadBtnWraper {
     width: 90vw;
+  }
+  .footer {
+    background-color: #2f3437;
+    color: #eee;
+    border-top: 5px solid #222;
+    font-size: 18px;
+  }
+  .footer a {
+    color: #0394e6;
   }
 }

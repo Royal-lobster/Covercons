@@ -195,16 +195,9 @@ export default function Home() {
         <main className={styles.main}>
           <h1 className={styles.title}>Notion Covercons</h1>
           <div className={styles.mobilePreviewBox}>
-            <h2 className={styles.mobilePreviewTitle}>
-              Live Preview{" "}
-              {loading ? (
-                <span className={styles.loadingMsg}>
-                  Loading: {versionCount}
-                </span>
-              ) : (
-                <></>
-              )}
-            </h2>
+            <div className={styles.previewLoading}>
+              {loading ? <p>loading - {versionCount}</p> : <></>}
+            </div>
 
             {errorIconFetch ? (
               <div
