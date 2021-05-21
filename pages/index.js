@@ -2,7 +2,12 @@ import React from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { SketchPicker } from "react-color";
+import {
+  ChromePicker,
+  CirclePicker,
+  GithubPicker,
+  SketchPicker,
+} from "react-color";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
@@ -320,9 +325,26 @@ export default function Home() {
               )}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>5. Select background color</h2>
-                <SketchPicker
+                <ChromePicker
                   color={bgColor}
                   onChangeComplete={(color) => setBgColor(color)}
+                />
+                <p className={styles.notionColours}>Notion Colours</p>
+                <CirclePicker
+                  color={bgColor}
+                  onChangeComplete={(color) => setBgColor(color)}
+                  className={styles.circlePicker}
+                  colors={[
+                    "#9B9A97",
+                    "#64473A",
+                    "#D9730D",
+                    "#DFAB01",
+                    "#0F7B6C",
+                    "#0B6E99",
+                    "#6940A5",
+                    "#AD1A72",
+                    "#E03E3E",
+                  ]}
                 />
               </div>
             </div>
