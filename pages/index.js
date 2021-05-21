@@ -153,6 +153,38 @@ export default function Home() {
   };
   return (
     <>
+      <Head>
+        {/* <!-- HTML Meta Tags --> */}
+        <title>Notion Covercons</title>
+        <meta name="description" content="Generate Beautiful Notion Covers" />
+        <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content="https://covercons.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Notion Covercons" />
+        <meta
+          property="og:description"
+          content="Generate Beautiful Notion Covers"
+        />
+        <meta
+          property="og:image"
+          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
+        />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="covercons.vercel.app" />
+        <meta property="twitter:url" content="https://covercons.vercel.app/" />
+        <meta name="twitter:title" content="Notion Covercons" />
+        <meta
+          name="twitter:description"
+          content="Generate Beautiful Notion Covers"
+        />
+        <meta
+          name="twitter:image"
+          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
+        />
+      </Head>
       <div className={styles.container}>
         <Head>
           <title>Notion Covercons</title>
