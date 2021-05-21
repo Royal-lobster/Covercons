@@ -195,6 +195,7 @@
   text-decoration: none;
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
+  border: none;
   font-weight: 400;
   cursor: pointer;
   color: #ffffff;
