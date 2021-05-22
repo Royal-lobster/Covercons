@@ -35,14 +35,18 @@ export default function Home() {
   const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
   const iconColor = React.useMemo(() => {
-      const color = '' + bgColor.hex;
-      const hasFullSpec = color.length === 7;
-      const m = color.substr(1).match(hasFullSpec ? /(\S{2})/g : /(\S{1})/g);
-      const r = parseInt(m[0] + (hasFullSpec ? '' : m[0]), 16);
-      const g = parseInt(m[1] + (hasFullSpec ? '' : m[1]), 16);
-      const b = parseInt(m[2] + (hasFullSpec ? '' : m[2]), 16);
+    const color = "" + bgColor.hex;
+    const hasFullSpec = color.length === 7;
+    const m = color.substr(1).match(hasFullSpec ? /(\S{2})/g : /(\S{1})/g);
+    const r = parseInt(m[0] + (hasFullSpec ? "" : m[0]), 16);
+    const g = parseInt(m[1] + (hasFullSpec ? "" : m[1]), 16);
+    const b = parseInt(m[2] + (hasFullSpec ? "" : m[2]), 16);
 
-      return r ? ((r * 0.299 + g * 0.587 + b * 0.114) > 186 ? '#000000' : '#ffffff') : '#ffffff';
+    return r
+      ? r * 0.299 + g * 0.587 + b * 0.114 > 186
+        ? "#000000"
+        : "#ffffff"
+      : "#ffffff";
   }, [bgColor]);
 
   React.useEffect(() => {
@@ -118,20 +122,20 @@ export default function Home() {
       `);
     } else if (coverType == "singlemiddleicon" && svg) {
       let replacedSvg = svg
-          .substring(svg.indexOf(">") + 1, svg.length - 6)
-          .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-          .replaceAll("<path", `<path fill='${iconColor}af' `)
-          .replaceAll("<rect", "<rect fill='#ffffffaf'")
-          .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
-          .replace(
-              new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
-              ""
-          )
-          .replaceAll("<g>", "")
-          .replaceAll("</g>", "");
+        .substring(svg.indexOf(">") + 1, svg.length - 6)
+        .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+        .replaceAll("<path", `<path fill='${iconColor}af' `)
+        .replaceAll("<rect", "<rect fill='#ffffffaf'")
+        .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
+        .replace(
+          new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
+          ""
+        )
+        .replaceAll("<g>", "")
+        .replaceAll("</g>", "");
       const pathCount = [...replacedSvg.matchAll(/<path.*?\/>/g)].length;
-      if(pathCount === 3) {
-        replacedSvg = replacedSvg.replace(/<path.*?\/>/, '');
+      if (pathCount === 3) {
+        replacedSvg = replacedSvg.replace(/<path.*?\/>/, "");
       }
 
       setGeneratedCoverSvg(
@@ -171,6 +175,7 @@ export default function Home() {
         <title>Notion Covercons</title>
         <meta name="description" content="Generate Beautiful Notion Covers" />
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+        <meta name="theme-color" content="#222222" />
         {/* <!-- Facebook Meta Tags --> */}
         <meta property="og:url" content="https://covercons.vercel.app/" />
         <meta property="og:type" content="website" />
