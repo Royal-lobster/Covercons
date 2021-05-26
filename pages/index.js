@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import tinycolor from "tinycolor2";
 import {
   ChromePicker,
   CirclePicker,
@@ -12,7 +13,7 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
 import useWindowSize from "../lib/winsizehook";
-
+import { getRegFromString } from "../lib/getRegFromString";
 export default function Home() {
   const downloadHelper_a_tag = React.useRef();
 
@@ -35,18 +36,10 @@ export default function Home() {
   const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
   const iconColor = React.useMemo(() => {
-    const color = "" + bgColor.hex;
-    const hasFullSpec = color.length === 7;
-    const m = color.substr(1).match(hasFullSpec ? /(\S{2})/g : /(\S{1})/g);
-    const r = parseInt(m[0] + (hasFullSpec ? "" : m[0]), 16);
-    const g = parseInt(m[1] + (hasFullSpec ? "" : m[1]), 16);
-    const b = parseInt(m[2] + (hasFullSpec ? "" : m[2]), 16);
-
-    return r
-      ? r * 0.299 + g * 0.587 + b * 0.114 > 186
-        ? "#000000"
-        : "#ffffff"
-      : "#ffffff";
+    if (tinycolor(bgColor.hex).getBrightness() > 200) {
+      var darkColour = shadeColor(bgColor.hex.substring(1), -50);
+      return darkColour;
+    } else return "#ffffffaf";
   }, [bgColor]);
 
   React.useEffect(() => {
@@ -124,11 +117,13 @@ export default function Home() {
       let replacedSvg = svg
         .substring(svg.indexOf(">") + 1, svg.length - 6)
         .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-        .replaceAll("<path", `<path fill='${iconColor}af' `)
-        .replaceAll("<rect", "<rect fill='#ffffffaf'")
-        .replaceAll("<polygon", "<polygon fill='#ffffffaf'")
+        .replaceAll("<path", `<path fill='${iconColor}' `)
+        .replaceAll("<rect", "<rect fill='${iconColor}'")
+        .replaceAll("<polygon", "<polygon fill='${iconColor}'")
         .replace(
-          new RegExp(/(<(.*?)fill='#ffffffaf')(.*?)(fill="none")(.*?)(>)/),
+          getRegFromString(
+            `/(<(.*?)fill='${iconColor}')(.*?)(fill="none")(.*?)(>)/`
+          ),
           ""
         )
         .replaceAll("<g>", "")
