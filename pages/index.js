@@ -117,9 +117,9 @@ export default function Home() {
       let replacedSvg = svg
         .substring(svg.indexOf(">") + 1, svg.length - 6)
         .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-        .replaceAll("<path", `<path fill='${iconColor}' `)
-        .replaceAll("<rect", "<rect fill='${iconColor}'")
-        .replaceAll("<polygon", "<polygon fill='${iconColor}'")
+        .replaceAll("<path", `<path fill="${iconColor}"`)
+        .replaceAll("<rect", `<rect fill="${iconColor}"`)
+        .replaceAll("<polygon", `<polygon fill="${iconColor}"`)
         .replace(
           getRegFromString(
             `/(<(.*?)fill='${iconColor}')(.*?)(fill="none")(.*?)(>)/`
