@@ -14,10 +14,15 @@ import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
 import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
+
 export default function Home() {
+  // REF TO CREATE A TAG FOR DOWNLOAD SVG
   const downloadHelper_a_tag = React.useRef();
 
+  // USED TO GET THE WINDOW SIZE
   const [width] = useWindowSize();
+
+  // APPLICATION STATE
   const [svg, setSvg] = React.useState(null);
   const [bgColor, setBgColor] = React.useState({ hex: "#0394e6" });
   const [icon, setIcon] = React.useState("home");
@@ -35,6 +40,7 @@ export default function Home() {
   const [iconPatternShade, setIconPatternShade] = React.useState(-25);
   const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
+  // STORES COLOR OF ICON FROM BACKGROUND COLOR
   const iconColor = React.useMemo(() => {
     if (tinycolor(bgColor.hex).getBrightness() > 200) {
       var darkColour = shadeColor(bgColor.hex.substring(1), -50);
@@ -42,6 +48,7 @@ export default function Home() {
     } else return "#ffffffaf";
   }, [bgColor]);
 
+  // GET THE ICON FROM GOOGLE FONTS AND STORE IT IN SVG STATE
   React.useEffect(() => {
     setErrorIconFetch(false);
     (async () => {
@@ -62,58 +69,67 @@ export default function Home() {
         }
       }
       if (version == 0) {
+        // IF ICON NOT FOUND SET ERROR TO TRUE AND SVG TO NULL
         setLoading(false);
         setSvg(null);
         setErrorIconFetch(true);
       }
     })();
   }, [icon, iconType]);
+
+  // GENERATE COMPLETE SVG WITH BACKGROUND FROM ICON
   React.useEffect(() => {
+    // FOR COVER TYPE - ICON PATTERN
     if (coverType == "iconpattern" && svg) {
-      setGeneratedCoverSvg(`<svg version="1.1"
-      baseProfile="full"
-      width="1500" height="600"
-      viewbox="0 0 1500 600"
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="${bgColor.hex}"/>
-      <rect width="100%" height="100%" fill="url(#pattern)"/>
-      <defs>
-        <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
-          <g>
-            ${svg
-              .substring(svg.indexOf(">") + 1, svg.length - 6)
-              .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-              .replaceAll(
-                "<path",
-                `<path fill= "${shadeColor(
-                  bgColor.hex.substring(1),
-                  parseInt(iconPatternShade)
-                )}"`
-              )
-              .replaceAll(
-                "<rect",
-                `<rect fill="${shadeColor(
-                  bgColor.hex.substring(1),
-                  parseInt(iconPatternShade)
-                )}"`
-              )
-              .replaceAll(
-                "<polygon",
-                `<polygon fill="${shadeColor(
-                  bgColor.hex.substring(1),
-                  parseInt(iconPatternShade)
-                )}"`
-              )
-              .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
-              .replaceAll("<g>", "")
-              .replaceAll("</g>", "")}
-          </g>
-      </pattern>
-    </defs>
-    </svg>
-      `);
-    } else if (coverType == "singlemiddleicon" && svg) {
+      setGeneratedCoverSvg(
+        `<svg version="1.1" 
+        baseProfile="full" 
+        width="1500" height="600"
+        viewbox="0 0 1500 600"
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="${bgColor.hex}"/>
+        <rect width="100%" height="100%" fill="url(#pattern)"/>
+        <defs>
+          <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
+              <g>
+                ${svg
+                  .substring(svg.indexOf(">") + 1, svg.length - 6)
+                  .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+                  .replaceAll(
+                    "<path",
+                    `<path fill= "${shadeColor(
+                      bgColor.hex.substring(1),
+                      parseInt(iconPatternShade)
+                    )}"`
+                  )
+                  .replaceAll(
+                    "<rect",
+                    `<rect fill="${shadeColor(
+                      bgColor.hex.substring(1),
+                      parseInt(iconPatternShade)
+                    )}"`
+                  )
+                  .replaceAll(
+                    "<polygon",
+                    `<polygon fill="${shadeColor(
+                      bgColor.hex.substring(1),
+                      parseInt(iconPatternShade)
+                    )}"`
+                  )
+                  .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
+                  .replaceAll("<g>", "")
+                  .replaceAll("</g>", "")}
+              </g>
+          </pattern>
+        </defs>
+      </svg>
+      `
+      );
+    }
+
+    // FOR COVER TYPE - SINGLE MIDDLE ICON
+    else if (coverType == "singlemiddleicon" && svg) {
       let replacedSvg = svg
         .substring(svg.indexOf(">") + 1, svg.length - 6)
         .replaceAll('<rect fill="none" height="24" width="24"/>', "")
@@ -128,22 +144,26 @@ export default function Home() {
         )
         .replaceAll("<g>", "")
         .replaceAll("</g>", "");
+
+      // CALCULATE PATH COUNT OF SVG
       const pathCount = [...replacedSvg.matchAll(/<path.*?\/>/g)].length;
-      if (pathCount === 3) {
+
+      // IF ICON HAS MORE THAN TWO PATHS
+      if (pathCount > 2) {
         replacedSvg = replacedSvg.replace(/<path.*?\/>/, "");
       }
 
+      // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
       setGeneratedCoverSvg(
         `<svg version="1.1"
-      baseProfile="full"
-      viewbox="0 0 1500 600"
-      width="1500" height="600"
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="${bgColor.hex}" />
-      <g transform="translate(610, 180) scale(10)" id="center_icon">${replacedSvg}</g>
-      </svg>
-      `
+          baseProfile="full"
+          viewbox="0 0 1500 600"
+          width="1500" height="600"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <rect width="100%" height="100%" fill="${bgColor.hex}" />
+          <g transform="translate(610, 180) scale(10)" id="center_icon">${replacedSvg}</g>
+         </svg>`
       );
     }
   }, [
@@ -157,6 +177,7 @@ export default function Home() {
     iconPatternShade,
   ]);
 
+  // WHEN DOWNLOAD SVG BUTTON IS CLICKED, CREATE A NEW BLOB AND DOWNLOAD IT
   const handleDownloadCover = () => {
     let blob = new Blob([generatedCoverSvg]);
     downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.svg`;
