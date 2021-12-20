@@ -412,9 +412,9 @@ export default function Home() {
                 {coverType == "iconpattern" && showAdvancedSettings && (
                   <motion.div
                     variants={{
-                      hidden: { scale: 0 },
+                      hidden: { opacity: 0 },
                       show: {
-                        scale: 1,
+                        opacity: 1,
                         transition: {
                           staggerChildren: 0.2,
                         },
@@ -430,8 +430,8 @@ export default function Home() {
                     {/* STEP 4.1 : SPACING BETWEEN ICONS */}
                     <motion.div
                       variants={{
-                        hidden: { scale: 0 },
-                        show: { scale: 1 },
+                        hidden: { opacity: 0 },
+                        show: { opacity: 1 },
                       }}
                       className={styles.iconPatternSetting}
                     >
@@ -457,8 +457,8 @@ export default function Home() {
                     {/* STEP 4.2 : ICON SIZE IN PATTERN */}
                     <motion.div
                       variants={{
-                        hidden: { scale: 0 },
-                        show: { scale: 1 },
+                        hidden: { opacity: 0 },
+                        show: { opacity: 1 },
                       }}
                       className={styles.iconPatternSetting}
                     >
@@ -484,8 +484,8 @@ export default function Home() {
                     {/* STEP 4.3 : PATTERN ROTATION */}
                     <motion.div
                       variants={{
-                        hidden: { scale: 0 },
-                        show: { scale: 1 },
+                        hidden: { opacity: 0 },
+                        show: { opacity: 1 },
                       }}
                       className={styles.iconPatternSetting}
                     >
@@ -511,8 +511,8 @@ export default function Home() {
                     {/* STEP 4.4 : ICON SHADE IN PATTER (dark / light) */}
                     <motion.div
                       variants={{
-                        hidden: { scale: 0 },
-                        show: { scale: 1 },
+                        hidden: { opacity: 0 },
+                        show: { opacity: 1 },
                       }}
                       className={styles.iconPatternSetting}
                     >
