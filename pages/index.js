@@ -136,6 +136,7 @@ export default function Home() {
         .replaceAll("<path", `<path fill="${iconColor}"`)
         .replaceAll("<rect", `<rect fill="${iconColor}"`)
         .replaceAll("<polygon", `<polygon fill="${iconColor}"`)
+        .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
         .replace(
           getRegFromString(
             `/(<(.*?)fill='${iconColor}')(.*?)(fill="none")(.*?)(>)/`
@@ -144,14 +145,6 @@ export default function Home() {
         )
         .replaceAll("<g>", "")
         .replaceAll("</g>", "");
-
-      // CALCULATE PATH COUNT OF SVG
-      const pathCount = [...replacedSvg.matchAll(/<path.*?\/>/g)].length;
-
-      // IF ICON HAS MORE THAN TWO PATHS
-      if (pathCount > 2) {
-        replacedSvg = replacedSvg.replace(/<path.*?\/>/, "");
-      }
 
       // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
       setGeneratedCoverSvg(
