@@ -208,7 +208,7 @@ export default function Home() {
     <>
       <Head>
         {/* <!-- HTML Meta Tags --> */}
-        <title>Notion Covercons</title>
+        <title>Covercons</title>
         <meta name="description" content="Generate Beautiful Notion Covers" />
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
         <meta name="theme-color" content="#222222" />
@@ -217,10 +217,10 @@ export default function Home() {
         {/* <!-- Facebook Meta Tags --> */}
         <meta property="og:url" content="https://covercons.vercel.app/" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Notion Covercons" />
+        <meta property="og:title" content="Covercons" />
         <meta
           property="og:description"
-          content="Generate Beautiful Notion Covers"
+          content="Generate beautiful cover images for Notion Pages, Blogs, and more"
         />
         <meta property="og:image" content="/og-image.png" />
 
@@ -228,10 +228,10 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="covercons.vercel.app" />
         <meta property="twitter:url" content="https://covercons.vercel.app/" />
-        <meta name="twitter:title" content="Notion Covercons" />
+        <meta name="twitter:title" content="Covercons" />
         <meta
           name="twitter:description"
-          content="Generate Beautiful Notion Covers"
+          content="Generate beautiful cover images for Notion Pages, Blogs, and more"
         />
         <meta name="twitter:image" content="/og-image.png" />
       </Head>
