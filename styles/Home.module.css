@@ -155,7 +155,6 @@
   margin-top: 10px;
   border: 1px solid #ffffff23;
   border-radius: 12px;
-  padding: 10px;
   flex-wrap: wrap;
 }
 .advancedSettingsBtn p {
@@ -379,10 +378,14 @@
   .mobilePreviewBox {
     width: 90%;
     margin: 0 auto;
+    display: flex;
   }
   .previewSvg {
-    max-width: 600px;
+    display: inline-block;
     margin: 0 auto;
+  }
+  .previewSvg svg {
+    max-height: 200px;
   }
   .errorTextWrapper {
     padding: 0;
@@ -397,7 +400,7 @@
     word-break: break-all;
   }
   .mobileErrorCover {
-    height: 150px !important;
+    height: calc(76px + 4vw * 4) !important;
   }
   .coverPreview {
     margin: 0 auto !important;
@@ -405,6 +408,7 @@
   }
   .downloadBtnWraper {
     width: 90vw;
+    max-width: 560px;
     flex-direction: column;
     margin-top: 0;
   }
@@ -413,19 +417,51 @@
   }
 }
 
+@media only screen and (max-width: 350px) {
+  .main {
+    padding: 10px;
+  }
+  .main h2 {
+    font-size: 18px;
+  }
+  .modifierSettings__iconNameSelect,
+  .modifierSettings__colorSelect,
+  .selectIconsFromGoogle,
+  .iconTypeSetting,
+  .iconPatternSetting {
+    padding: 20px 10px;
+    box-shadow: none;
+  }
+  .advancedSettingsBtn {
+    padding: 10px;
+  }
+  .footer {
+    max-width: 90vw;
+  }
+  .errorTextWrapper p,
+  .errorTextWrapper h2 {
+    padding: 0;
+    margin: 0;
+  }
+  .errorTextWrapper h2 {
+    font-size: 16px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+}
+@media only screen and (max-width: 270px) {
+  .main {
+    display: none;
+  }
+}
 /* WRAPER TOP PADDING STYLES */
 @media only screen and (max-width: 790px) {
   .wrapper {
-    padding-top: 320px;
+    padding-top: 270px;
   }
 }
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 560px) {
   .wrapper {
-    padding-top: 50vw;
-  }
-}
-@media only screen and (max-width: 500px) {
-  .wrapper {
-    padding-top: 55vw;
+    padding-top: calc(100px + 90vw / 3);
   }
 }

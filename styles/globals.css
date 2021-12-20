@@ -127,3 +127,19 @@ input:checked + .slider:before {
 .react-responsive-modal-modal svg {
   fill: #ccc;
 }
+
+@media only screen and (max-width: 270px) {
+  body::after {
+    content: "Please use a device with larger screen";
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    text-align: center;
+    font-size: 12vw;
+    background-color: #ff4c29;
+    padding-top: 40vh;
+    color: #fff;
+    z-index: 999;
+  }
+}
