@@ -525,9 +525,8 @@ export default function Home() {
                   />
                 )}
               </div>
-
+              <a ref={downloadHelper_a_tag}></a>
               <div className={styles.downloadBtnWraper}>
-                <a ref={downloadHelper_a_tag}></a>
                 <button
                   className={styles.downloadBtn}
                   onClick={handleDownloadCover}
