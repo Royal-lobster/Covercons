@@ -86,6 +86,12 @@
   width: 100%;
   appearance: none;
 }
+.modifierSettings__colorSelect input {
+  background-color: #fff;
+}
+.modifierSettings__colorSelect input:focus {
+  outline: none;
+}
 .iconPatternSetting input[type="range"] {
   margin-top: 10px;
 }

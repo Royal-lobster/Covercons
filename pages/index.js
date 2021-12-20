@@ -31,7 +31,7 @@ export default function Home() {
 
   // APPLICATION STATE
   const [svg, setSvg] = React.useState(null);
-  const [bgColor, setBgColor] = React.useState({ hex: "#0394e6" });
+  const [bgColor, setBgColor] = React.useState({ hex: "#3A95FF" });
   const [icon, setIcon] = React.useState("home");
   const [iconInputFieldText, setIconInputFieldText] = React.useState("");
   const [open, setOpen] = React.useState(false);
