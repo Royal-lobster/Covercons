@@ -10,6 +10,7 @@ import { shadeColor } from "../lib/shadeColor";
 import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
+import truncateString from "../lib/truncateString";
 
 function svg2img(svgString) {
   const parser = new DOMParser();
@@ -177,7 +178,7 @@ export default function Home() {
   ]);
 
   // WHEN DOWNLOAD SVG BUTTON IS CLICKED, CREATE A NEW BLOB AND DOWNLOAD IT
-  const handleDownloadCover = () => {
+  const handleDownloadSvg = () => {
     let blob = new Blob([generatedCoverSvg]);
     downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.svg`;
     downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
@@ -211,6 +212,8 @@ export default function Home() {
         <meta name="description" content="Generate Beautiful Notion Covers" />
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
         <meta name="theme-color" content="#222222" />
+        <meta name="color-scheme" content="dark" />
+
         {/* <!-- Facebook Meta Tags --> */}
         <meta property="og:url" content="https://covercons.vercel.app/" />
         <meta property="og:type" content="website" />
@@ -240,34 +243,45 @@ export default function Home() {
       </Head>
       <div className={styles.container}>
         <Head>
-          <title>Notion Covercons</title>
+          <title>Covercons</title>
           <meta name="description" content="Generate Beautiful Notion Covers" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <main className={styles.main}>
-          <h1 className={styles.title}>Notion Covercons</h1>
+          <h1 className={styles.title}>
+            <img src="/favicon.svg" />
+            Covercons
+          </h1>
           {width < 790 ? (
-            <div className={styles.mobilePreviewBox}>
-              <div className={styles.previewLoading}>
-                {loading ? <p>loading - {versionCount}</p> : <></>}
-              </div>
-
-              {errorIconFetch ? (
-                <div
-                  className={`${styles.errorCover} ${styles.mobileErrorCover}`}
-                >
-                  <div className={styles.errorTextWrapper}>
-                    <h2>Icon: "{icon}" not found </h2>
-                    <p>You may have copied the incorrect icon name</p>
-                  </div>
+            <div className={styles.mobilePreviewBoxWrapper}>
+              <div className={styles.mobilePreviewBox}>
+                <div className={styles.previewLoading}>
+                  {loading ? <p>loading - {versionCount}</p> : <></>}
                 </div>
-              ) : (
-                <div
-                  className={styles.previewSvg}
-                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-                />
-              )}
+
+                {errorIconFetch ? (
+                  <div
+                    className={`${styles.errorCover} ${styles.mobileErrorCover}`}
+                  >
+                    <div className={styles.errorTextWrapper}>
+                      <h2>
+                        Icon:{" "}
+                        <span className={styles.errorTextIconName}>
+                          "{truncateString(icon, 10)}"
+                        </span>{" "}
+                        not found{" "}
+                      </h2>
+                      <p>You may have copied the incorrect icon name</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={styles.previewSvg}
+                    dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                  />
+                )}
+              </div>
             </div>
           ) : (
             <></>
@@ -282,7 +296,12 @@ export default function Home() {
                 >
                   Instructions
                 </button>
-                <Modal open={open} onClose={() => setOpen(false)} center>
+                <Modal
+                  style={{ background: "#2C394B" }}
+                  open={open}
+                  onClose={() => setOpen(false)}
+                  center
+                >
                   <h1>Instructions: </h1>
                   <div className={styles.googleFontsInstructions}>
                     <Image
@@ -329,7 +348,7 @@ export default function Home() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    setIcon(iconInputFieldText);
+                    setIcon(iconInputFieldText.toLowerCase().trim());
                   }}
                 >
                   <input
@@ -340,7 +359,9 @@ export default function Home() {
                     placeholder="eg: home"
                   />
 
-                  <button className={styles.iconNameSubmit}>Submit</button>
+                  <button disabled={loading} className={styles.iconNameSubmit}>
+                    Submit
+                  </button>
                 </form>
               </div>
               <div className={styles.iconTypeSetting}>
@@ -357,6 +378,7 @@ export default function Home() {
                   <></>
                 )}
                 <select
+                  disabled={loading}
                   type="text"
                   onChange={(e) => setIconType(e.target.value)}
                   disabled={loading}
@@ -373,6 +395,7 @@ export default function Home() {
                 <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
                 <select
                   type="text"
+                  disabled={loading}
                   value={coverType}
                   onChange={(e) => setCoverType(e.target.value)}
                 >
@@ -501,7 +524,9 @@ export default function Home() {
             <div className={styles.coverPreview}>
               <div className={styles.previewBox}>
                 <h2>
-                  Live Preview{" "}
+                  <span className={styles.previewBoxTitle}>
+                    🟢 Live Preview
+                  </span>{" "}
                   {loading ? (
                     <span className={styles.loadingMsg}>
                       Loading: {versionCount}
@@ -529,9 +554,14 @@ export default function Home() {
               <div className={styles.downloadBtnWraper}>
                 <button
                   className={styles.downloadBtn}
-                  onClick={handleDownloadCover}
+                  onClick={handleDownloadSvg}
                   disabled={errorIconFetch}
                 >
+                  <img
+                    src="/assets/notion-logo.svg"
+                    alt="download icon"
+                    width={20}
+                  />
                   Download SVG
                 </button>
                 <button
@@ -539,15 +569,22 @@ export default function Home() {
                   onClick={handleDownloadPng}
                   disabled={errorIconFetch}
                 >
+                  <img
+                    src="/assets/image-logo.svg"
+                    alt="download icon"
+                    width={20}
+                  />
                   Download PNG
                 </button>
               </div>
             </div>
           </div>
+          <footer className={styles.footer}>
+            <p>
+              Made By <a href="https://srujangurram.me"> Srujan</a>
+            </p>
+          </footer>
         </main>
-        <footer className={styles.footer}>
-          Made By <a href="https://srujangurram.me"> Srujan</a>
-        </footer>
       </div>
 
       <script
@@ -557,7 +594,7 @@ export default function Home() {
         data-id="srujangurram"
         data-description="Support me on Buy me a coffee!"
         data-message="If you like this tool you can offer me a coffee 😋"
-        data-color="#5F7FFF"
+        data-color="#ff4c29"
         data-position="Right"
         data-x_margin="18"
         data-y_margin="18"

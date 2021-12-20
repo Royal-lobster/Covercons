@@ -1,3 +1,6 @@
+:root {
+  --color-scheme: "dark";
+}
 html,
 body {
   padding: 0 !important;
@@ -8,9 +11,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
-
+body {
+  background-color: #082032;
+}
 h2 {
-  margin: 22px 0;
+  margin: 10px 0 22px 0;
 }
 a {
   color: inherit;
@@ -19,6 +24,20 @@ a {
 
 * {
   box-sizing: border-box;
+}
+/* For Firefox */
+progress::-moz-progress-bar {
+  background: #ff4c29;
+}
+
+/* For Chrome or Safari */
+progress::-webkit-progress-value {
+  background: #ff4c29;
+}
+
+/* For IE10 */
+progress {
+  background: #ff4c29;
 }
 
 .iconErrorDiv {
@@ -87,9 +106,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(35px);
+  -ms-transform: translateX(35px);
+  transform: translateX(35px);
 }
 
 /* Rounded sliders */
@@ -99,4 +118,12 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+.react-responsive-modal-modal {
+  background: #2c394b !important;
+  color: #ccc;
+  border-radius: 8px;
+}
+.react-responsive-modal-modal svg {
+  fill: #ccc;
 }
