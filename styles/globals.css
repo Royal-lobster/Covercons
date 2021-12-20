@@ -25,6 +25,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
 /* For Firefox */
 progress::-moz-progress-bar {
   background: #ff4c29;

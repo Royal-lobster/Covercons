@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import tinycolor from "tinycolor2";
 import { ChromePicker, CirclePicker } from "react-color";
+import { motion, AnimatePresence } from "framer-motion";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
@@ -11,16 +12,6 @@ import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
 import truncateString from "../lib/truncateString";
-
-function svg2img(svgString) {
-  const parser = new DOMParser();
-  var svg = svgString;
-  var xml = parser.parseFromString(svg, "image/svg+xml");
-  var svg64 = btoa(xml);
-  var b64start = "data:image/svg+xml;base64,";
-  var image64 = b64start + svg64;
-  return image64;
-}
 
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
@@ -242,12 +233,16 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
+        {/* APP MARKUP STARTS FROM HERE */}
         <main className={styles.main}>
+          {/* HEADER */}
           <h1 className={styles.title}>
             <img src="/favicon.svg" />
             Covercons
           </h1>
-          {width < 790 ? (
+
+          {/* COVER PREVIEW ON TOP FOR SMALLER DEVICES */}
+          {width < 790 && (
             <div className={styles.mobilePreviewBoxWrapper}>
               <div className={styles.mobilePreviewBox}>
                 <div className={styles.previewLoading}>
@@ -277,11 +272,12 @@ export default function Home() {
                 )}
               </div>
             </div>
-          ) : (
-            <></>
           )}
+
           <div className={styles.wrapper}>
+            {/* SETTINGS PANEL SELECTION */}
             <div className={styles.modifierSettings}>
+              {/* STEP 1 : ASK USER TO GET ICON FROM GOOGLE FONTS */}
               <div className={styles.selectIconsFromGoogle}>
                 <h2>1. Select and Copy icon name from google fonts</h2>
                 <button
@@ -290,45 +286,33 @@ export default function Home() {
                 >
                   Instructions
                 </button>
-                <Modal
-                  style={{ background: "#2C394B" }}
-                  open={open}
-                  onClose={() => setOpen(false)}
-                  center
-                >
-                  <h1>Instructions: </h1>
-                  <div className={styles.googleFontsInstructions}>
-                    <Image
-                      src="/assets/step_1.png"
-                      height="351"
-                      width="197.57"
-                    />
-                    <Image
-                      src="/assets/step_2.png"
-                      height="351"
-                      width="197.57"
-                    />
-                    <Image
-                      src="/assets/step_3.png"
-                      height="351"
-                      width="197.57"
-                    />
-                  </div>
-                  <a
-                    href="https://fonts.google.com/icons"
-                    target="_blank"
-                    className={styles.iconNameSubmit}
-                  >
-                    Go to Google Fonts Icons
-                  </a>
-                  <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
-                </Modal>
               </div>
+              <Modal
+                style={{ background: "#2C394B" }}
+                open={open}
+                onClose={() => setOpen(false)}
+                center
+              >
+                <h1>Instructions: </h1>
+                <div className={styles.googleFontsInstructions}>
+                  <Image src="/assets/step_1.png" height="351" width="197.57" />
+                  <Image src="/assets/step_2.png" height="351" width="197.57" />
+                  <Image src="/assets/step_3.png" height="351" width="197.57" />
+                </div>
+                <a
+                  href="https://fonts.google.com/icons"
+                  target="_blank"
+                  className={styles.iconNameSubmit}
+                >
+                  Go to Google Fonts Icons
+                </a>
+                <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
+              </Modal>
 
+              {/* STEP 2 : ASK USER TO PASTE THE COPIED ICON NAME */}
               <div className={styles.modifierSettings__iconNameSelect}>
                 <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
-
-                {loading ? (
+                {loading && (
                   <div className={styles.loadingBar}>
                     <progress
                       id="file"
@@ -336,8 +320,6 @@ export default function Home() {
                       max="15"
                     ></progress>
                   </div>
-                ) : (
-                  <></>
                 )}
                 <form
                   onSubmit={(e) => {
@@ -358,9 +340,11 @@ export default function Home() {
                   </button>
                 </form>
               </div>
+
+              {/* STEP 3 : ASK USER TO SELECT ICON TYPE (outline/filled/two-shade) */}
               <div className={styles.iconTypeSetting}>
                 <h2 htmlFor="icon_name">3. Select the icon type</h2>
-                {loading ? (
+                {loading && (
                   <div className={styles.loadingBar}>
                     <progress
                       id="file"
@@ -368,8 +352,6 @@ export default function Home() {
                       max="15"
                     ></progress>
                   </div>
-                ) : (
-                  <></>
                 )}
                 <select
                   disabled={loading}
@@ -385,111 +367,169 @@ export default function Home() {
                   <option value="materialiconsround">Rounded</option>
                 </select>
               </div>
+
+              {/* STEP 4 : ASK USER TO SELECT THE COVER DESIGN TYPE */}
               <div className={styles.iconTypeSetting}>
                 <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
                 <select
                   type="text"
                   disabled={loading}
                   value={coverType}
-                  onChange={(e) => setCoverType(e.target.value)}
+                  onChange={(e) => {
+                    setCoverType(e.target.value);
+                    setShowAdvancedSettings(false);
+                  }}
                 >
                   <option value="singlemiddleicon">Single Icon</option>
                   <option value="iconpattern">Icon Pattern</option>
                 </select>
-                {coverType == "iconpattern" ? (
-                  <div className={styles.advancedSettingsBtn}>
-                    <p>Show Advanced Settings</p>
-                    <label className="switch">
-                      <input
-                        type="checkbox"
-                        defaultChecked={showAdvancedSettings}
-                        onChange={(e) => {
-                          setShowAdvancedSettings(e.target.checked);
-                        }}
-                      />
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-              {coverType == "iconpattern" && showAdvancedSettings ? (
-                <>
-                  <div className={styles.iconPatternSetting}>
-                    <h2>4.1 Select Spacing between Icons</h2>
-                    <div className={styles.iconPaternSettingDisplayValue}>
-                      Spacing: {iconPatternSpacing}{" "}
-                      <span
-                        className={styles.defaultChanger}
-                        onClick={() => setIconPatternSpacing(25)}
-                      >
-                        {"("}default 25{")"}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      name="icon_spacing"
-                      value={iconPatternSpacing}
-                      min="20"
-                      max="80"
-                      onChange={(e) => setIconPatternSpacing(e.target.value)}
-                    ></input>
-                  </div>
-                  <div className={styles.iconPatternSetting}>
-                    <h2>4.2 Select Icons size in Pattern</h2>
-                    <div className={styles.iconPaternSettingDisplayValue}>
-                      Icon Size: {iconPatternSize}{" "}
-                      <span
-                        className={styles.defaultChanger}
-                        onClick={() => setIconPatternSize(2)}
-                      >
-                        {"("}default 2{")"}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      name="icon_size"
-                      value={iconPatternSize}
-                      min="1"
-                      max="30"
-                      onChange={(e) => setIconPatternSize(e.target.value)}
-                    ></input>
-                  </div>
-                  <div className={styles.iconPatternSetting}>
-                    <h2>4.3 Select Rotation in Pattern</h2>
-                    <div className={styles.iconPaternSettingDisplayValue}>
-                      Rotation : {iconPatternRotation}{" "}
-                      <span
-                        className={styles.defaultChanger}
-                        onClick={() => setIconPatternRotation(330)}
-                      >
-                        {"("}default 330{")"}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      name="icon_size"
-                      value={iconPatternRotation}
-                      min="0"
-                      max="360"
-                      onChange={(e) => setIconPatternRotation(e.target.value)}
-                    ></input>
-                  </div>{" "}
-                  <div className={styles.iconPatternSetting}>
-                    <h2>4.4 Select icon shade in Pattern</h2>
-                    <select
-                      type="text"
-                      onChange={(e) => setIconPatternShade(e.target.value)}
+
+                {/* ADVANCED SETTINGS FOR ICON PATTERN*/}
+                <AnimatePresence>
+                  {coverType == "iconpattern" && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className={styles.advancedSettingsBtn}
                     >
-                      <option value={-25}>Dark (default)</option>
-                      <option value={28}>Light</option>
-                    </select>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
+                      <p>Show Advanced Settings</p>
+                      <label className="switch">
+                        <input
+                          type="checkbox"
+                          defaultChecked={showAdvancedSettings}
+                          onChange={(e) => {
+                            setShowAdvancedSettings(e.target.checked);
+                          }}
+                        />
+                        <span class="slider round"></span>
+                      </label>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <AnimatePresence>
+                {coverType == "iconpattern" && showAdvancedSettings && (
+                  <motion.div
+                    variants={{
+                      hidden: { scale: 0 },
+                      show: {
+                        scale: 1,
+                        transition: {
+                          staggerChildren: 0.2,
+                        },
+                      },
+                      exit: {
+                        opacity: 0,
+                      },
+                    }}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                  >
+                    {/* STEP 4.1 : SPACING BETWEEN ICONS */}
+                    <motion.div
+                      variants={{
+                        hidden: { scale: 0 },
+                        show: { scale: 1 },
+                      }}
+                      className={styles.iconPatternSetting}
+                    >
+                      <h2>4.1 Select Spacing between Icons</h2>
+                      <div className={styles.iconPaternSettingDisplayValue}>
+                        Spacing: {iconPatternSpacing}{" "}
+                        <span
+                          className={styles.defaultChanger}
+                          onClick={() => setIconPatternSpacing(25)}
+                        >
+                          {"("}default 25{")"}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        name="icon_spacing"
+                        value={iconPatternSpacing}
+                        min="20"
+                        max="80"
+                        onChange={(e) => setIconPatternSpacing(e.target.value)}
+                      ></input>
+                    </motion.div>
+                    {/* STEP 4.2 : ICON SIZE IN PATTERN */}
+                    <motion.div
+                      variants={{
+                        hidden: { scale: 0 },
+                        show: { scale: 1 },
+                      }}
+                      className={styles.iconPatternSetting}
+                    >
+                      <h2>4.2 Select Icons size in Pattern</h2>
+                      <div className={styles.iconPaternSettingDisplayValue}>
+                        Icon Size: {iconPatternSize}{" "}
+                        <span
+                          className={styles.defaultChanger}
+                          onClick={() => setIconPatternSize(2)}
+                        >
+                          {"("}default 2{")"}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        name="icon_size"
+                        value={iconPatternSize}
+                        min="1"
+                        max="30"
+                        onChange={(e) => setIconPatternSize(e.target.value)}
+                      ></input>
+                    </motion.div>
+                    {/* STEP 4.3 : PATTERN ROTATION */}
+                    <motion.div
+                      variants={{
+                        hidden: { scale: 0 },
+                        show: { scale: 1 },
+                      }}
+                      className={styles.iconPatternSetting}
+                    >
+                      <h2>4.3 Select Rotation in Pattern</h2>
+                      <div className={styles.iconPaternSettingDisplayValue}>
+                        Rotation : {iconPatternRotation}{" "}
+                        <span
+                          className={styles.defaultChanger}
+                          onClick={() => setIconPatternRotation(330)}
+                        >
+                          {"("}default 330{")"}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        name="icon_size"
+                        value={iconPatternRotation}
+                        min="0"
+                        max="360"
+                        onChange={(e) => setIconPatternRotation(e.target.value)}
+                      ></input>
+                    </motion.div>{" "}
+                    {/* STEP 4.4 : ICON SHADE IN PATTER (dark / light) */}
+                    <motion.div
+                      variants={{
+                        hidden: { scale: 0 },
+                        show: { scale: 1 },
+                      }}
+                      className={styles.iconPatternSetting}
+                    >
+                      <h2>4.4 Select icon shade in Pattern</h2>
+                      <select
+                        type="text"
+                        onChange={(e) => setIconPatternShade(e.target.value)}
+                      >
+                        <option value={-25}>Dark (default)</option>
+                        <option value={28}>Light</option>
+                      </select>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* STEP 5 : ASK USER TO SELECT THE COVER COLOR */}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>5. Select background color</h2>
                 <ChromePicker
@@ -515,6 +555,8 @@ export default function Home() {
                 />
               </div>
             </div>
+
+            {/* COVER PREVIEW IN THE RIGHT SIDE FOR LARGE SCREENS */}
             <div className={styles.coverPreview}>
               <div className={styles.previewBox}>
                 <h2>
@@ -544,6 +586,8 @@ export default function Home() {
                   />
                 )}
               </div>
+
+              {/* DOWNLOAD BUTTONS FOR COVER IMAGES */}
               <a ref={downloadHelper_a_tag}></a>
               <div className={styles.downloadBtnWraper}>
                 <button
@@ -573,6 +617,8 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* FOOTER AND CREDITS */}
           <footer className={styles.footer}>
             <p>
               Made By <a href="https://srujangurram.me"> Srujan</a>
@@ -580,7 +626,7 @@ export default function Home() {
           </footer>
         </main>
       </div>
-
+      {/* BUY ME A COFFEE WIDGET FOR DONATIONS */}
       <script
         data-name="BMC-Widget"
         data-cfasync="false"
