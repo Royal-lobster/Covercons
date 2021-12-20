@@ -224,7 +224,7 @@ export default function Home() {
         />
         <meta
           property="og:image"
-          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
+          content="https://raw.githubusercontent.com/Royal-lobster/covercons/main/covercons.png"
         />
 
         {/* <!-- Twitter Meta Tags --> */}
