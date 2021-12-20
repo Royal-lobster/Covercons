@@ -3,17 +3,23 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import tinycolor from "tinycolor2";
-import {
-  ChromePicker,
-  CirclePicker,
-  GithubPicker,
-  SketchPicker,
-} from "react-color";
+import { ChromePicker, CirclePicker } from "react-color";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
 import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
+import SVGToImage from "../lib/SVGToImage";
+
+function svg2img(svgString) {
+  const parser = new DOMParser();
+  var svg = svgString;
+  var xml = parser.parseFromString(svg, "image/svg+xml");
+  var svg64 = btoa(xml);
+  var b64start = "data:image/svg+xml;base64,";
+  var image64 = b64start + svg64;
+  return image64;
+}
 
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
@@ -176,6 +182,26 @@ export default function Home() {
     downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.svg`;
     downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
     downloadHelper_a_tag.current.click();
+  };
+
+  // WHEN DOWNLOAD PNG BUTTON IS CLICKED, CREATE A NEW BLOB AND DOWNLOAD IT
+  const handleDownloadPng = async () => {
+    SVGToImage({
+      svg: generatedCoverSvg,
+      mimetype: "image/png",
+      width: 1500,
+      height: 600,
+      quality: 1,
+      outputFormat: "blob",
+    })
+      .then(function (blob) {
+        downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.png`;
+        downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
+        downloadHelper_a_tag.current.click();
+      })
+      .catch(function (err) {
+        alert(err);
+      });
   };
   return (
     <>
@@ -501,35 +527,42 @@ export default function Home() {
               </div>
 
               <div className={styles.downloadBtnWraper}>
-                <script
-                  data-name="BMC-Widget"
-                  data-cfasync="false"
-                  src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-                  data-id="srujangurram"
-                  data-description="Support me on Buy me a coffee!"
-                  data-message="If you like this tool you can offer me a coffee 😋"
-                  data-color="#5F7FFF"
-                  data-position="Right"
-                  data-x_margin="18"
-                  data-y_margin="18"
-                ></script>
                 <a ref={downloadHelper_a_tag}></a>
                 <button
                   className={styles.downloadBtn}
                   onClick={handleDownloadCover}
                   disabled={errorIconFetch}
                 >
-                  Download Cover
+                  Download SVG
+                </button>
+                <button
+                  className={styles.downloadBtn}
+                  onClick={handleDownloadPng}
+                  disabled={errorIconFetch}
+                >
+                  Download PNG
                 </button>
               </div>
             </div>
           </div>
         </main>
-
         <footer className={styles.footer}>
           Made By <a href="https://srujangurram.me"> Srujan</a>
         </footer>
       </div>
+
+      <script
+        data-name="BMC-Widget"
+        data-cfasync="false"
+        src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+        data-id="srujangurram"
+        data-description="Support me on Buy me a coffee!"
+        data-message="If you like this tool you can offer me a coffee 😋"
+        data-color="#5F7FFF"
+        data-position="Right"
+        data-x_margin="18"
+        data-y_margin="18"
+      ></script>
     </>
   );
 }
