@@ -329,7 +329,8 @@
     flex-direction: column;
   }
   .title {
-    font-size: 20px;
+    font-size: 21px;
+    gap: 10px;
     position: fixed;
     top: 0;
     padding: 18px;
