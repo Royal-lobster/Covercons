@@ -1,10 +1,38 @@
-# Notion Covercons
-> A tool to generate beautiful infinte notion images with icons
 
-> link: https://covercons.vercel.app/
----
-It takes google material icons which is contains 1000s of icons and any background color from a color picker to generate cover image. 
-The image exported is svg image which is vector based and loads way faster than bitmap images like pngs and jpegs. You can upload the exported .svg file as cover images for notion pages.
-<p align="center">
-  <img src="./covercons.png"/>
-</p>
+# Watchlister
+
+A tool to generate beautiful infinte notion images with icons
+
+🔗 **Link:** https://covercons.vercel.app/
+
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+## Screenshots
+
+![App Screenshot](https://raw.githubusercontent.com/Royal-lobster/covercons/main/covercons.png)
+
+  
+## Installation
+
+```bash
+git clone https://github.com/Royal-lobster/watchlister-nextjs
+
+cd covercons
+
+ npm install
+```
+## Running the Application
+
+```bash
+npm run dev
+```
+    
+## Authors
+
+- [@SrujanGurram](https://www.github.com/royal-lobster)
+
+  
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+  
