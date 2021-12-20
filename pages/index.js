@@ -222,10 +222,7 @@ export default function Home() {
           property="og:description"
           content="Generate Beautiful Notion Covers"
         />
-        <meta
-          property="og:image"
-          content="https://raw.githubusercontent.com/Royal-lobster/covercons/main/covercons.png"
-        />
+        <meta property="og:image" content="/og-image.png" />
 
         {/* <!-- Twitter Meta Tags --> */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -236,10 +233,7 @@ export default function Home() {
           name="twitter:description"
           content="Generate Beautiful Notion Covers"
         />
-        <meta
-          name="twitter:image"
-          content="https://raw.githubusercontent.com/Royal-lobster/notioncovercons-nextjs/main/covercons.png"
-        />
+        <meta name="twitter:image" content="/og-image.png" />
       </Head>
       <div className={styles.container}>
         <Head>
