@@ -14,7 +14,7 @@ A tool to generate beautiful infinte notion images with icons
 ## Installation
 
 ```bash
-git clone https://github.com/Royal-lobster/watchlister-nextjs
+git clone https://github.com/Royal-lobster/covercons
 
 cd covercons
 
