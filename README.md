@@ -18,7 +18,7 @@ git clone https://github.com/Royal-lobster/covercons
 
 cd covercons
 
- npm install
+npm install
 ```
 ## Running the Application
 
