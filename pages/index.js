@@ -302,7 +302,7 @@ export default function Home() {
                       }}
                       className={styles.iconPatternSetting}
                     >
-                      <h2>4.1 Select Spacing between Icons</h2>
+                      <h2>Select Spacing between Icons</h2>
                       <div className={styles.iconPaternSettingDisplayValue}>
                         Spacing: {iconPatternSpacing}{" "}
                         <span
