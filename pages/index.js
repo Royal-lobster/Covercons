@@ -52,6 +52,26 @@ export default function Home() {
 
   // GENERATE COMPLETE SVG WITH BACKGROUND FROM ICON
   React.useEffect(() => {
+    // CLEAN THE FETCHED SVG (MOST OF THE ICON BUGS CAN BE SOLVED HERE)
+    let cleanedSvg = (color) => {
+      return svg
+        .substring(svg.indexOf(">") + 1, svg.length - 6)
+        .replaceAll('<rect fill="none" height="24" width="24"/>', "")
+        .replaceAll("<path", `<path fill="${color}"`)
+        .replaceAll("<rect", `<rect fill="${color}"`)
+        .replaceAll("<circle", `<circle fill="${color}"`)
+        .replaceAll("<polygon", `<polygon fill="${color}"`)
+        .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
+        .replace(
+          getRegFromString(
+            `/(<(.*?)fill='${color}')(.*?)(fill="none")(.*?)(>)/`
+          ),
+          ""
+        )
+        .replaceAll("<g>", "")
+        .replaceAll("</g>", "");
+    };
+
     // FOR COVER TYPE - ICON PATTERN
     if (coverType == "iconpattern" && svg) {
       setGeneratedCoverSvg(
@@ -66,33 +86,12 @@ export default function Home() {
         <defs>
           <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
               <g>
-                ${svg
-                  .substring(svg.indexOf(">") + 1, svg.length - 6)
-                  .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-                  .replaceAll(
-                    "<path",
-                    `<path fill= "${shadeColor(
-                      bgColor.hex.substring(1),
-                      parseInt(iconPatternShade)
-                    )}"`
+                ${cleanedSvg(
+                  shadeColor(
+                    bgColor.hex.substring(1),
+                    parseInt(iconPatternShade)
                   )
-                  .replaceAll(
-                    "<rect",
-                    `<rect fill="${shadeColor(
-                      bgColor.hex.substring(1),
-                      parseInt(iconPatternShade)
-                    )}"`
-                  )
-                  .replaceAll(
-                    "<polygon",
-                    `<polygon fill="${shadeColor(
-                      bgColor.hex.substring(1),
-                      parseInt(iconPatternShade)
-                    )}"`
-                  )
-                  .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
-                  .replaceAll("<g>", "")
-                  .replaceAll("</g>", "")}
+                )}
               </g>
           </pattern>
         </defs>
@@ -103,23 +102,6 @@ export default function Home() {
 
     // FOR COVER TYPE - SINGLE MIDDLE ICON
     else if (coverType == "singlemiddleicon" && svg) {
-      let replacedSvg = svg
-        .substring(svg.indexOf(">") + 1, svg.length - 6)
-        .replaceAll('<rect fill="none" height="24" width="24"/>', "")
-        .replaceAll("<path", `<path fill="${iconColor}"`)
-        .replaceAll("<rect", `<rect fill="${iconColor}"`)
-        .replaceAll("<circle", `<circle fill="${iconColor}"`)
-        .replaceAll("<polygon", `<polygon fill="${iconColor}"`)
-        .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
-        .replace(
-          getRegFromString(
-            `/(<(.*?)fill='${iconColor}')(.*?)(fill="none")(.*?)(>)/`
-          ),
-          ""
-        )
-        .replaceAll("<g>", "")
-        .replaceAll("</g>", "");
-
       // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
       setGeneratedCoverSvg(
         `<svg version="1.1"
@@ -129,7 +111,9 @@ export default function Home() {
           preserveAspectRatio="xMidYMid meet"
           xmlns="http://www.w3.org/2000/svg">
           <rect width="100%" height="100%" fill="${bgColor.hex}" />
-          <g transform="translate(610, 180) scale(10)" id="center_icon">${replacedSvg}</g>
+          <g transform="translate(610, 180) scale(10)" id="center_icon">${cleanedSvg(
+            iconColor
+          )}</g>
          </svg>`
       );
     }
