@@ -1,17 +1,14 @@
 import React from "react";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import tinycolor from "tinycolor2";
 import { ChromePicker, CirclePicker } from "react-color";
 import { motion, AnimatePresence } from "framer-motion";
-import "react-responsive-modal/styles.css";
-import { Modal } from "react-responsive-modal";
 import { shadeColor } from "../lib/shadeColor";
 import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
-import truncateString from "../lib/truncateString";
+import IconSearch from "../components/IconSearch";
 
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
@@ -23,13 +20,6 @@ export default function Home() {
   // APPLICATION STATE
   const [svg, setSvg] = React.useState(null);
   const [bgColor, setBgColor] = React.useState({ hex: "#3A95FF" });
-  const [icon, setIcon] = React.useState("home");
-  const [iconInputFieldText, setIconInputFieldText] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [errorIconFetch, setErrorIconFetch] = React.useState(false);
-  const [versionCount, setVersionCount] = React.useState();
-  const [iconType, setIconType] = React.useState("materialiconstwotone");
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
   const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
@@ -37,6 +27,10 @@ export default function Home() {
   const [iconPatternRotation, setIconPatternRotation] = React.useState(330);
   const [iconPatternShade, setIconPatternShade] = React.useState(-25);
   const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
+  const [selectedIconName, setSelectedIconName] = React.useState("rocket");
+  const [selectedIconVersion, setSelectedIconVersion] = React.useState(1);
+  const [selectedIconType, setSelectedIconType] =
+    React.useState("materialicons");
 
   // STORES COLOR OF ICON FROM BACKGROUND COLOR
   const iconColor = React.useMemo(() => {
@@ -48,32 +42,13 @@ export default function Home() {
 
   // GET THE ICON FROM GOOGLE FONTS AND STORE IT IN SVG STATE
   React.useEffect(() => {
-    setErrorIconFetch(false);
-    (async () => {
-      let version = 15;
-      while (version > 0) {
-        let response = await fetch(
-          `https://fonts.gstatic.com/s/i/${iconType}/${icon}/v${version}/24px.svg`
-        );
-        if (await response.ok) {
-          setSvg(await response.text());
-          setLoading(false);
-          version = -1;
-        } else {
-          setErrorIconFetch(false);
-          setLoading(true);
-          setVersionCount(version);
-          version--;
-        }
-      }
-      if (version == 0) {
-        // IF ICON NOT FOUND SET ERROR TO TRUE AND SVG TO NULL
-        setLoading(false);
-        setSvg(null);
-        setErrorIconFetch(true);
-      }
-    })();
-  }, [icon, iconType]);
+    fetch(
+      `https://fonts.gstatic.com/s/i/${selectedIconType}/${selectedIconName}/v${selectedIconVersion}/24px.svg`
+    )
+      .then((res) => res.text())
+      .then((b) => setSvg(b))
+      .catch((err) => console.log(err));
+  }, [selectedIconName, selectedIconVersion, selectedIconType]);
 
   // GENERATE COMPLETE SVG WITH BACKGROUND FROM ICON
   React.useEffect(() => {
@@ -133,6 +108,7 @@ export default function Home() {
         .replaceAll('<rect fill="none" height="24" width="24"/>', "")
         .replaceAll("<path", `<path fill="${iconColor}"`)
         .replaceAll("<rect", `<rect fill="${iconColor}"`)
+        .replaceAll("<circle", `<circle fill="${iconColor}"`)
         .replaceAll("<polygon", `<polygon fill="${iconColor}"`)
         .replace(new RegExp(/<(.*?)(fill="none")(.*?)>/), "")
         .replace(
@@ -171,7 +147,7 @@ export default function Home() {
   // WHEN DOWNLOAD SVG BUTTON IS CLICKED, CREATE A NEW BLOB AND DOWNLOAD IT
   const handleDownloadSvg = () => {
     let blob = new Blob([generatedCoverSvg]);
-    downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.svg`;
+    downloadHelper_a_tag.current.download = `covercon_${selectedIconName}_${coverType}.svg`;
     downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
     downloadHelper_a_tag.current.click();
   };
@@ -187,7 +163,7 @@ export default function Home() {
       outputFormat: "blob",
     })
       .then(function (blob) {
-        downloadHelper_a_tag.current.download = `covercon_${icon}_${coverType}.png`;
+        downloadHelper_a_tag.current.download = `covercon_${selectedIconName}_${coverType}.png`;
         downloadHelper_a_tag.current.href = window.URL.createObjectURL(blob);
         downloadHelper_a_tag.current.click();
       })
@@ -195,6 +171,7 @@ export default function Home() {
         alert(err);
       });
   };
+
   return (
     <>
       <Head>
@@ -226,6 +203,7 @@ export default function Home() {
         />
         <meta name="twitter:image" content="/og-image.png" />
       </Head>
+
       <div className={styles.container}>
         <Head>
           <title>Covercons</title>
@@ -245,31 +223,10 @@ export default function Home() {
           {width < 790 && (
             <div className={styles.mobilePreviewBoxWrapper}>
               <div className={styles.mobilePreviewBox}>
-                <div className={styles.previewLoading}>
-                  {loading ? <p>loading - {versionCount}</p> : <></>}
-                </div>
-
-                {errorIconFetch ? (
-                  <div
-                    className={`${styles.errorCover} ${styles.mobileErrorCover}`}
-                  >
-                    <div className={styles.errorTextWrapper}>
-                      <h2>
-                        Icon:{" "}
-                        <span className={styles.errorTextIconName}>
-                          "{truncateString(icon, 10)}"
-                        </span>{" "}
-                        not found{" "}
-                      </h2>
-                      <p>You may have copied the incorrect icon name</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={styles.previewSvg}
-                    dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-                  />
-                )}
+                <div
+                  className={styles.previewSvg}
+                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                />
               </div>
             </div>
           )}
@@ -277,103 +234,29 @@ export default function Home() {
           <div className={styles.wrapper}>
             {/* SETTINGS PANEL SELECTION */}
             <div className={styles.modifierSettings}>
-              {/* STEP 1 : ASK USER TO GET ICON FROM GOOGLE FONTS */}
-              <div className={styles.selectIconsFromGoogle}>
-                <h2>1. Select and Copy icon name from google fonts</h2>
-                <button
-                  onClick={() => setOpen(true)}
-                  className={styles.iconNameSubmit}
-                >
-                  Instructions
-                </button>
-              </div>
-              <Modal
-                style={{ background: "#2C394B" }}
-                open={open}
-                onClose={() => setOpen(false)}
-                center
-              >
-                <h1>Instructions: </h1>
-                <div className={styles.googleFontsInstructions}>
-                  <Image src="/assets/step_1.png" height="351" width="197.57" />
-                  <Image src="/assets/step_2.png" height="351" width="197.57" />
-                  <Image src="/assets/step_3.png" height="351" width="197.57" />
-                </div>
-                <a
-                  href="https://fonts.google.com/icons"
-                  target="_blank"
-                  className={styles.iconNameSubmit}
-                >
-                  Go to Google Fonts Icons
-                </a>
-                <p className={styles.opensInNewTabMsg}>(opens in new tab)</p>
-              </Modal>
-
-              {/* STEP 2 : ASK USER TO PASTE THE COPIED ICON NAME */}
-              <div className={styles.modifierSettings__iconNameSelect}>
-                <h2 htmlFor="icon_name">2. Paste the copied icon name</h2>
-                {loading && (
-                  <div className={styles.loadingBar}>
-                    <progress
-                      id="file"
-                      value={`${15 - versionCount}`}
-                      max="15"
-                    ></progress>
-                  </div>
-                )}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setIcon(iconInputFieldText.toLowerCase().trim());
-                  }}
-                >
-                  <input
-                    type="text"
-                    disabled={loading}
-                    value={iconInputFieldText}
-                    onChange={(e) => setIconInputFieldText(e.target.value)}
-                    placeholder="eg: home"
-                  />
-
-                  <button disabled={loading} className={styles.iconNameSubmit}>
-                    Submit
-                  </button>
-                </form>
-              </div>
-
-              {/* STEP 3 : ASK USER TO SELECT ICON TYPE (outline/filled/two-shade) */}
+              {/* STEP 1 : ASK USER TO SEARCH AND SELECT AN ICON */}
+              <IconSearch
+                setSelectedIconName={setSelectedIconName}
+                setSelectedIconVersion={setSelectedIconVersion}
+              />
+              {/* STEP 2 : ASK USER TO SELECT ICON TYPE (outline/filled/two-shade) */}
               <div className={styles.iconTypeSetting}>
-                <h2 htmlFor="icon_name">3. Select the icon type</h2>
-                {loading && (
-                  <div className={styles.loadingBar}>
-                    <progress
-                      id="file"
-                      value={`${15 - versionCount}`}
-                      max="15"
-                    ></progress>
-                  </div>
-                )}
+                <h2 htmlFor="icon_name">Select the icon type</h2>
                 <select
-                  disabled={loading}
                   type="text"
-                  onChange={(e) => setIconType(e.target.value)}
-                  disabled={loading}
+                  onChange={(e) => setSelectedIconType(e.target.value)}
                 >
-                  <option value="materialiconstwotone">
-                    Two shade (default)
-                  </option>
-                  <option value="materialicons">Filled</option>
+                  <option value="materialicons">Filled (default)</option>
+                  <option value="materialiconstwotone">Two shade</option>
                   <option value="materialiconsoutlined">Outline</option>
                   <option value="materialiconsround">Rounded</option>
                 </select>
               </div>
-
-              {/* STEP 4 : ASK USER TO SELECT THE COVER DESIGN TYPE */}
+              {/* STEP 3 : ASK USER TO SELECT THE COVER DESIGN TYPE */}
               <div className={styles.iconTypeSetting}>
-                <h2 htmlFor="icon_name">4. Select the Cover Design</h2>
+                <h2 htmlFor="icon_name">Select the Cover Design</h2>
                 <select
                   type="text"
-                  disabled={loading}
                   value={coverType}
                   onChange={(e) => {
                     setCoverType(e.target.value);
@@ -427,7 +310,7 @@ export default function Home() {
                     animate="show"
                     exit="exit"
                   >
-                    {/* STEP 4.1 : SPACING BETWEEN ICONS */}
+                    {/* STEP 3.1 : SPACING BETWEEN ICONS */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0 },
@@ -454,7 +337,7 @@ export default function Home() {
                         onChange={(e) => setIconPatternSpacing(e.target.value)}
                       ></input>
                     </motion.div>
-                    {/* STEP 4.2 : ICON SIZE IN PATTERN */}
+                    {/* STEP 3.2 : ICON SIZE IN PATTERN */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0 },
@@ -462,7 +345,7 @@ export default function Home() {
                       }}
                       className={styles.iconPatternSetting}
                     >
-                      <h2>4.2 Select Icons size in Pattern</h2>
+                      <h2>Select Icons size in Pattern</h2>
                       <div className={styles.iconPaternSettingDisplayValue}>
                         Icon Size: {iconPatternSize}{" "}
                         <span
@@ -481,7 +364,7 @@ export default function Home() {
                         onChange={(e) => setIconPatternSize(e.target.value)}
                       ></input>
                     </motion.div>
-                    {/* STEP 4.3 : PATTERN ROTATION */}
+                    {/* STEP 3.3 : PATTERN ROTATION */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0 },
@@ -489,7 +372,7 @@ export default function Home() {
                       }}
                       className={styles.iconPatternSetting}
                     >
-                      <h2>4.3 Select Rotation in Pattern</h2>
+                      <h2>Select Rotation in Pattern</h2>
                       <div className={styles.iconPaternSettingDisplayValue}>
                         Rotation : {iconPatternRotation}{" "}
                         <span
@@ -508,7 +391,7 @@ export default function Home() {
                         onChange={(e) => setIconPatternRotation(e.target.value)}
                       ></input>
                     </motion.div>{" "}
-                    {/* STEP 4.4 : ICON SHADE IN PATTER (dark / light) */}
+                    {/* STEP 3.4 : ICON SHADE IN PATTER (dark / light) */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0 },
@@ -516,7 +399,7 @@ export default function Home() {
                       }}
                       className={styles.iconPatternSetting}
                     >
-                      <h2>4.4 Select icon shade in Pattern</h2>
+                      <h2>Select icon shade in Pattern</h2>
                       <select
                         type="text"
                         onChange={(e) => setIconPatternShade(e.target.value)}
@@ -528,10 +411,9 @@ export default function Home() {
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* STEP 5 : ASK USER TO SELECT THE COVER COLOR */}
+              {/* STEP 4 : ASK USER TO SELECT THE COVER COLOR */}
               <div className={styles.modifierSettings__colorSelect}>
-                <h2>5. Select background color</h2>
+                <h2>Select background color</h2>
                 <ChromePicker
                   color={bgColor}
                   onChangeComplete={(color) => setBgColor(color)}
@@ -562,29 +444,12 @@ export default function Home() {
                 <h2>
                   <span className={styles.previewBoxTitle}>
                     🟢 Live Preview
-                  </span>{" "}
-                  {loading ? (
-                    <span className={styles.loadingMsg}>
-                      Loading: {versionCount}
-                    </span>
-                  ) : (
-                    <></>
-                  )}
+                  </span>
                 </h2>
-
-                {errorIconFetch ? (
-                  <div className={styles.errorCover}>
-                    <div className={styles.errorTextWrapper}>
-                      <h2>Icon: "{icon}" not found </h2>
-                      <p>You may have copied the incorrect icon name</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={styles.previewSvg}
-                    dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
-                  />
-                )}
+                <div
+                  className={styles.previewSvg}
+                  dangerouslySetInnerHTML={{ __html: generatedCoverSvg }}
+                />
               </div>
 
               {/* DOWNLOAD BUTTONS FOR COVER IMAGES */}
@@ -593,7 +458,6 @@ export default function Home() {
                 <button
                   className={styles.downloadBtn}
                   onClick={handleDownloadSvg}
-                  disabled={errorIconFetch}
                 >
                   <img
                     src="/assets/notion-logo.svg"
@@ -605,7 +469,6 @@ export default function Home() {
                 <button
                   className={styles.downloadBtn}
                   onClick={handleDownloadPng}
-                  disabled={errorIconFetch}
                 >
                   <img
                     src="/assets/image-logo.svg"
