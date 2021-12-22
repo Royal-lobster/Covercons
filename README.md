@@ -1,5 +1,5 @@
 
-# Watchlister
+# Covercons
 
 A tool to generate beautiful infinte notion images with icons
 
