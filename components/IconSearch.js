@@ -110,9 +110,9 @@ function IconSearch({ setSelectedIconName, setSelectedIconVersion }) {
           background-color: #fff;
           width: 100%;
           height: 100%;
-          border: none;
           padding: 2px 0 0 0;
           outline: none;
+          border: none;
           font-size: 1.3rem;
           color: #222;
           font-weight: 600;
