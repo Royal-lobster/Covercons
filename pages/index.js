@@ -164,7 +164,6 @@ export default function Home() {
         <meta name="description" content="Generate Beautiful Notion Covers" />
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
         <meta name="theme-color" content="#222222" />
-        <meta name="color-scheme" content="dark" />
 
         {/* <!-- Facebook Meta Tags --> */}
         <meta property="og:url" content="https://covercons.vercel.app/" />
@@ -189,12 +188,6 @@ export default function Home() {
       </Head>
 
       <div className={styles.container}>
-        <Head>
-          <title>Covercons</title>
-          <meta name="description" content="Generate Beautiful Notion Covers" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
         {/* APP MARKUP STARTS FROM HERE */}
         <main className={styles.main}>
           {/* HEADER */}
