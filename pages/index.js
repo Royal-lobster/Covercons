@@ -75,8 +75,8 @@ export default function Home() {
     // FOR COVER TYPE - ICON PATTERN
     if (coverType == "iconpattern" && svg) {
       setGeneratedCoverSvg(
-        `<svg version="1.1" 
-        baseProfile="full" 
+        `<svg version="1.1"
+        baseProfile="full"
         width="1500" height="600"
         viewbox="0 0 1500 600"
         preserveAspectRatio="xMidYMid meet"
@@ -114,6 +114,21 @@ export default function Home() {
           <g transform="translate(610, 180) scale(10)" id="center_icon">${cleanedSvg(
             iconColor
           )}</g>
+         </svg>`
+      );
+    }
+
+    // FOR COVER TYPE - NO ICON
+    else if (coverType == "noicon" && svg) {
+      // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
+      setGeneratedCoverSvg(
+        `<svg version="1.1"
+          baseProfile="full"
+          viewbox="0 0 1500 600"
+          width="1500" height="600"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <rect width="100%" height="100%" fill="${bgColor.hex}" />
          </svg>`
       );
     }
@@ -242,6 +257,7 @@ export default function Home() {
                 >
                   <option value="singlemiddleicon">Single Icon</option>
                   <option value="iconpattern">Icon Pattern</option>
+                  <option value="noicon">No Icon</option>
                 </select>
 
                 {/* ADVANCED SETTINGS FOR ICON PATTERN*/}
@@ -262,7 +278,7 @@ export default function Home() {
                             setShowAdvancedSettings(e.target.checked);
                           }}
                         />
-                        <span class="slider round"></span>
+                        <span className="slider round"></span>
                       </label>
                     </motion.div>
                   )}
