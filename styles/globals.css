@@ -147,3 +147,11 @@ input:checked + .slider:before {
     z-index: 999;
   }
 }
+
+.chrome-picker {
+  min-width: calc(225px + 0.25em);
+  margin: 6px 0 0 0;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}

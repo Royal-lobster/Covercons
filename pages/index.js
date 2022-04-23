@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import tinycolor from "tinycolor2";
 import { ChromePicker, CirclePicker } from "react-color";
 import { motion, AnimatePresence } from "framer-motion";
 import { shadeColor } from "../lib/shadeColor";
@@ -9,6 +8,12 @@ import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
 import IconSearch from "../components/IconSearch";
+
+import {
+  AnglePicker,
+  GradientPicker,
+  getGradientPreview,
+} from "react-linear-gradient-picker";
 
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
@@ -19,7 +24,6 @@ export default function Home() {
 
   // APPLICATION STATE
   const [svg, setSvg] = React.useState(null);
-  const [bgColor, setBgColor] = React.useState({ hex: "#3A95FF" });
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
   const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
@@ -32,13 +36,24 @@ export default function Home() {
   const [selectedIconType, setSelectedIconType] =
     React.useState("materialicons");
 
+  const initialPallet = [{ offset: "1.00", color: "rgb(58, 148, 255)" }];
+  const [angle, setAngle] = React.useState(90);
+  const [palette, setPalette] = React.useState(initialPallet);
+  const { gradient } = getGradientPreview(palette, angle);
+  const rgbToRgba = (rgb, a = 1) =>
+    rgb.replace("rgb(", "rgba(").replace(")", `, ${a})`);
+
+  const onAngleInputChange = (angle) => {
+    angle = angle > 360 ? angle - 360 : angle;
+    angle = angle < 0 ? angle + 360 : angle;
+
+    setAngle(angle);
+  };
+
   // STORES COLOR OF ICON FROM BACKGROUND COLOR
   const iconColor = React.useMemo(() => {
-    if (tinycolor(bgColor.hex).getBrightness() > 200) {
-      var darkColour = shadeColor(bgColor.hex.substring(1), -50);
-      return darkColour;
-    } else return "#ffffffaf";
-  }, [bgColor]);
+    return "#ffffffaf";
+  });
 
   // GET THE ICON FROM GOOGLE FONTS AND STORE IT IN SVG STATE
   React.useEffect(() => {
@@ -72,25 +87,38 @@ export default function Home() {
         .replaceAll("</g>", "");
     };
 
+    const stops = palette.reduce(
+      (acc, { offset, color, opacity = 1 }) =>
+        `${acc}<stop offset="${offset}" style="stop-color:${color};stop-opacity:${opacity}" />`,
+      ""
+    );
+
     // FOR COVER TYPE - ICON PATTERN
     if (coverType == "iconpattern" && svg) {
       setGeneratedCoverSvg(
-        `<svg version="1.1" 
-        baseProfile="full" 
+        `<svg version="1.1"
+        baseProfile="full"
         width="1500" height="600"
         viewbox="0 0 1500 600"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="100%" fill="${bgColor.hex}"/>
+        <rect width="100%" height="100%" fill="url(#gradient)"/>
         <rect width="100%" height="100%" fill="url(#pattern)"/>
         <defs>
-          <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
+          <linearGradient id="gradient" x1="${gradient.x1}" y1="${
+          gradient.y1
+        }" x2="${gradient.x2}" y2="${gradient.y2}">
+            ${stops}
+          </linearGradient>
+          <pattern id="pattern" x="0" y="0" \
+           width="${iconPatternSpacing}" \
+           height="${iconPatternSpacing}" \
+           patternTransform="rotate(${iconPatternRotation}) \
+           scale(${iconPatternSize})" \
+           patternUnits="userSpaceOnUse">
               <g>
                 ${cleanedSvg(
-                  shadeColor(
-                    bgColor.hex.substring(1),
-                    parseInt(iconPatternShade)
-                  )
+                  shadeColor(iconColor.substring(1), parseInt(iconPatternShade))
                 )}
               </g>
           </pattern>
@@ -110,15 +138,44 @@ export default function Home() {
           width="1500" height="600"
           preserveAspectRatio="xMidYMid meet"
           xmlns="http://www.w3.org/2000/svg">
-          <rect width="100%" height="100%" fill="${bgColor.hex}" />
+          <defs>
+          <linearGradient id="gradient" x1="${gradient.x1}" y1="${
+          gradient.y1
+        }" x2="${gradient.x2}" y2="${gradient.y2}">
+          ${stops}
+          </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#gradient)" />
           <g transform="translate(610, 180) scale(10)" id="center_icon">${cleanedSvg(
             iconColor
           )}</g>
          </svg>`
       );
     }
+
+    // FOR COVER TYPE - NO ICON
+    else if (coverType == "noicon" && svg) {
+      // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
+      setGeneratedCoverSvg(
+        `<svg version="1.1"
+          baseProfile="full"
+          viewbox="0 0 1500 600"
+          width="1500" height="600"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w3.org/2000/svg">
+          <defs>
+          <linearGradient id="gradient" x1="${gradient.x1}" y1="${gradient.y1}" x2="${gradient.x2}" y2="${gradient.y2}">
+          ${stops}
+          </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#gradient)" />
+         </svg>`
+      );
+    }
   }, [
-    bgColor,
+    angle,
+    gradient,
+    palette,
     iconColor,
     coverType,
     svg,
@@ -154,6 +211,19 @@ export default function Home() {
       .catch(function (err) {
         alert(err);
       });
+  };
+
+  const WrappedChromePicker = ({ onSelect, ...rest }) => {
+    return (
+      <ChromePicker
+        {...rest}
+        color={rgbToRgba(rest.color, rest.opacity)}
+        onChange={(c) => {
+          const { r, g, b, a } = c.rgb;
+          onSelect(`rgb(${r}, ${g}, ${b})`, a);
+        }}
+      />
+    );
   };
 
   return (
@@ -242,6 +312,7 @@ export default function Home() {
                 >
                   <option value="singlemiddleicon">Single Icon</option>
                   <option value="iconpattern">Icon Pattern</option>
+                  <option value="noicon">No Icon</option>
                 </select>
 
                 {/* ADVANCED SETTINGS FOR ICON PATTERN*/}
@@ -262,7 +333,7 @@ export default function Home() {
                             setShowAdvancedSettings(e.target.checked);
                           }}
                         />
-                        <span class="slider round"></span>
+                        <span className="slider round"></span>
                       </label>
                     </motion.div>
                   )}
@@ -391,27 +462,61 @@ export default function Home() {
               {/* STEP 4 : ASK USER TO SELECT THE COVER COLOR */}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>Select background color</h2>
-                <ChromePicker
-                  color={bgColor}
-                  onChangeComplete={(color) => setBgColor(color)}
-                />
-                <p className={styles.notionColours}>Notion Colours</p>
-                <CirclePicker
-                  color={bgColor}
-                  onChangeComplete={(color) => setBgColor(color)}
-                  className={styles.circlePicker}
-                  colors={[
-                    "#9B9A97",
-                    "#64473A",
-                    "#D9730D",
-                    "#DFAB01",
-                    "#0F7B6C",
-                    "#0B6E99",
-                    "#6940A5",
-                    "#AD1A72",
-                    "#E03E3E",
-                  ]}
-                />
+                <div className={styles.colorSelect__picker}>
+                  <div className={styles.inner}>
+                    <GradientPicker
+                      {...{
+                        minStops: 1,
+                        maxStops: 5,
+                        paletteHeight: 32,
+                        palette,
+                        onPaletteChange: setPalette,
+                      }}
+                    >
+                      <WrappedChromePicker />
+                    </GradientPicker>
+                    <div className={styles.angle_holder}>
+                      <AnglePicker
+                        angle={angle}
+                        setAngle={setAngle}
+                        size={32}
+                      />
+                      <div className={styles.angle_inputs}>
+                        <span onClick={() => onAngleInputChange(angle - 1)}>
+                          &#8722;
+                        </span>
+                        <input value={`${angle}°`} disabled />
+                        <span onClick={() => onAngleInputChange(angle + 1)}>
+                          &#43;
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className={styles.notionColours}>Notion Colors</p>
+                  <CirclePicker
+                    onChangeComplete={(color) =>
+                      setPalette([
+                        {
+                          color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`,
+                          offset: "1.000",
+                          opacity: color.rgb.a,
+                        },
+                      ])
+                    }
+                    className={styles.circlePicker}
+                    colors={[
+                      "#9B9A97",
+                      "#64473A",
+                      "#D9730D",
+                      "#DFAB01",
+                      "#0F7B6C",
+                      "#0B6E99",
+                      "#6940A5",
+                      "#AD1A72",
+                      "#E03E3E",
+                    ]}
+                  />
+                </div>
               </div>
             </div>
 
@@ -420,7 +525,7 @@ export default function Home() {
               <div className={styles.previewBox}>
                 <h2>
                   <span className={styles.previewBoxTitle}>
-                    🟢 Live Preview
+                    🟢 &nbsp;Live Preview
                   </span>
                 </h2>
                 <div
