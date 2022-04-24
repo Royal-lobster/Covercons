@@ -70,7 +70,7 @@ export default function Home() {
       );
     }
     // console log for testing
-    console.log(" 🎨 \u001b[1;34m Input Color: ", bgColorRadial);
+    console.log(" 🎨 \u001b[1;34m Input Color: ", bgColor);
     console.log(" 🧬 \u001b[1;36m Generated Gradient: ", gradient);
     return `
     <svg version="1.1" baseProfile="full" viewbox="0 0 1500 600" width="1500" height="600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
