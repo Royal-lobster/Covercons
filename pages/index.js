@@ -53,15 +53,32 @@ export default function Home() {
   }, [selectedIconName, selectedIconVersion, selectedIconType]);
 
   // SVG WRAPPER TO WRAP SVG TAG WITH PROPERTIES
-  const svgWrapper = (insides) =>
-    `
+  const svgWrapper = (insides) => {
+    let gradient;
+    // if bgColor string is radial gradient css :
+    if (bgColor.includes("radial-gradient")) {
+      let bgColorRadial = bgColor;
+      gradient = cssGradient2SVG(bgColorRadial)
+        ?.replace("<radialGradient", '<radialGradient id="gradient"')
+        ?.replace("</linearGradient", "</radialGradient");
+    }
+    // if bgColor string is linear gradient css :
+    else if (bgColor.includes("linear-gradient")) {
+      gradient = cssGradient2SVG(bgColor)?.replace(
+        "<linearGradient",
+        '<linearGradient id="gradient"'
+      );
+    }
+    // console log for testing
+    console.log(" 🎨 \u001b[1;34m Input Color: ", bgColorRadial);
+    console.log(" 🧬 \u001b[1;36m Generated Gradient: ", gradient);
+    return `
     <svg version="1.1" baseProfile="full" viewbox="0 0 1500 600" width="1500" height="600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-    ${cssGradient2SVG(bgColor)
-      ?.replace("<linearGradient", '<linearGradient id="gradient"')
-      ?.replace("<radialGradient", '<radialGradient id="gradient"')}')}  
+    ${gradient || ""}  
     ${insides}
     </svg>
     `;
+  };
 
   // GENERATE COMPLETE SVG WITH BACKGROUND FROM ICON
   React.useEffect(() => {
@@ -91,13 +108,17 @@ export default function Home() {
         svgWrapper(
           `
         <rect width="100%" height="100%" fill="${bgColor}"/>
+        <rect width="100%" height="100%" fill="url(#gradient)"/>
         <rect width="100%" height="100%" fill="url(#pattern)"/>
+
         <defs>
           <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
               <g>
-                ${cleanedSvg(
-                  shadeColor(bgColor.substring(1), parseInt(iconPatternShade))
-                )}
+                ${
+                  iconPatternShade == "light"
+                    ? cleanedSvg("rgba(225,225,225,0.6)")
+                    : cleanedSvg("rgba(0, 0, 0, 0.2)")
+                }
               </g>
           </pattern>
         </defs>
@@ -385,8 +406,8 @@ export default function Home() {
                         type="text"
                         onChange={(e) => setIconPatternShade(e.target.value)}
                       >
-                        <option value={-25}>Dark (default)</option>
-                        <option value={28}>Light</option>
+                        <option value="dark">Dark (default)</option>
+                        <option value="light">Light</option>
                       </select>
                     </motion.div>
                   </motion.div>
@@ -398,7 +419,9 @@ export default function Home() {
                 <ReactGPicker
                   onChange={(color) => setBgColor(color)}
                   format="hex"
+                  width="500px"
                   solid
+                  // showGradientPosition={false}
                   gradient
                   defaultColors={[
                     "#9B9A97",
