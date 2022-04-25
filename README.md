@@ -5,9 +5,9 @@ A tool to generate beautiful infinte notion images with icons
 
 🔗 **Link:** https://covercons.vercel.app/
 
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-## Screenshots [![CodeFactor](https://www.codefactor.io/repository/github/royal-lobster/covercons/badge)](https://www.codefactor.io/repository/github/royal-lobster/covercons)
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs) [![CodeFactor](https://www.codefactor.io/repository/github/royal-lobster/covercons/badge)](https://www.codefactor.io/repository/github/royal-lobster/covercons)
 
+## Screenshots
 ![App Screenshot](https://raw.githubusercontent.com/Royal-lobster/covercons/main/covercons.png)
 
   
