@@ -9,6 +9,8 @@ import useWindowSize from "../lib/winsizehook";
 import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
 import IconSearch from "../components/IconSearch";
+import cssGradient2SVG from "gradient2svg";
+import ReactGPicker from "react-gcolor-picker";
 
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
@@ -19,7 +21,7 @@ export default function Home() {
 
   // APPLICATION STATE
   const [svg, setSvg] = React.useState(null);
-  const [bgColor, setBgColor] = React.useState({ hex: "#3A95FF" });
+  const [bgColor, setBgColor] = React.useState("#3A95FF");
   const [coverType, setCoverType] = React.useState("singlemiddleicon");
   const [generatedCoverSvg, setGeneratedCoverSvg] = React.useState("");
   const [iconPatternSpacing, setIconPatternSpacing] = React.useState(25);
@@ -34,8 +36,8 @@ export default function Home() {
 
   // STORES COLOR OF ICON FROM BACKGROUND COLOR
   const iconColor = React.useMemo(() => {
-    if (tinycolor(bgColor.hex).getBrightness() > 200) {
-      var darkColour = shadeColor(bgColor.hex.substring(1), -50);
+    if (tinycolor(bgColor).getBrightness() > 200) {
+      var darkColour = shadeColor(bgColor.substring(1), -50);
       return darkColour;
     } else return "#ffffffaf";
   }, [bgColor]);
@@ -49,6 +51,34 @@ export default function Home() {
       .then((b) => setSvg(b))
       .catch((err) => console.log(err));
   }, [selectedIconName, selectedIconVersion, selectedIconType]);
+
+  // SVG WRAPPER TO WRAP SVG TAG WITH PROPERTIES
+  const svgWrapper = (insides) => {
+    let gradient;
+    // if bgColor string is radial gradient css :
+    if (bgColor.includes("radial-gradient")) {
+      let bgColorRadial = bgColor;
+      gradient = cssGradient2SVG(bgColorRadial)
+        ?.replace("<radialGradient", '<radialGradient id="gradient"')
+        ?.replace("</linearGradient", "</radialGradient");
+    }
+    // if bgColor string is linear gradient css :
+    else if (bgColor.includes("linear-gradient")) {
+      gradient = cssGradient2SVG(bgColor)?.replace(
+        "<linearGradient",
+        '<linearGradient id="gradient"'
+      );
+    }
+    // console log for testing
+    console.log(" 🎨 \u001b[1;34m Input Color: ", bgColor);
+    console.log(" 🧬 \u001b[1;36m Generated Gradient: ", gradient);
+    return `
+    <svg version="1.1" baseProfile="full" viewbox="0 0 1500 600" width="1500" height="600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    ${gradient || ""}  
+    ${insides}
+    </svg>
+    `;
+  };
 
   // GENERATE COMPLETE SVG WITH BACKGROUND FROM ICON
   React.useEffect(() => {
@@ -75,28 +105,25 @@ export default function Home() {
     // FOR COVER TYPE - ICON PATTERN
     if (coverType == "iconpattern" && svg) {
       setGeneratedCoverSvg(
-        `<svg version="1.1" 
-        baseProfile="full" 
-        width="1500" height="600"
-        viewbox="0 0 1500 600"
-        preserveAspectRatio="xMidYMid meet"
-        xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="100%" fill="${bgColor.hex}"/>
+        svgWrapper(
+          `
+        <rect width="100%" height="100%" fill="${bgColor}"/>
+        <rect width="100%" height="100%" fill="url(#gradient)"/>
         <rect width="100%" height="100%" fill="url(#pattern)"/>
+
         <defs>
           <pattern id="pattern" x="0" y="0" width="${iconPatternSpacing}" height="${iconPatternSpacing}" patternTransform="rotate(${iconPatternRotation}) scale(${iconPatternSize})" patternUnits="userSpaceOnUse">
               <g>
-                ${cleanedSvg(
-                  shadeColor(
-                    bgColor.hex.substring(1),
-                    parseInt(iconPatternShade)
-                  )
-                )}
+                ${
+                  iconPatternShade == "light"
+                    ? cleanedSvg("rgba(225,225,225,0.6)")
+                    : cleanedSvg("rgba(0, 0, 0, 0.2)")
+                }
               </g>
           </pattern>
         </defs>
-      </svg>
       `
+        )
       );
     }
 
@@ -104,17 +131,15 @@ export default function Home() {
     else if (coverType == "singlemiddleicon" && svg) {
       // GENERATE COVER WITH BACKGROUND IMAGE WITH REPLACED SVG
       setGeneratedCoverSvg(
-        `<svg version="1.1"
-          baseProfile="full"
-          viewbox="0 0 1500 600"
-          width="1500" height="600"
-          preserveAspectRatio="xMidYMid meet"
-          xmlns="http://www.w3.org/2000/svg">
-          <rect width="100%" height="100%" fill="${bgColor.hex}" />
+        svgWrapper(
+          `
+          <rect width="100%" height="100%" fill="${bgColor}" />
+          <rect width="100%" height="100%" fill="url(#gradient)"/>
           <g transform="translate(610, 180) scale(10)" id="center_icon">${cleanedSvg(
             iconColor
           )}</g>
-         </svg>`
+         `
+        )
       );
     }
   }, [
@@ -381,8 +406,8 @@ export default function Home() {
                         type="text"
                         onChange={(e) => setIconPatternShade(e.target.value)}
                       >
-                        <option value={-25}>Dark (default)</option>
-                        <option value={28}>Light</option>
+                        <option value="dark">Dark (default)</option>
+                        <option value="light">Light</option>
                       </select>
                     </motion.div>
                   </motion.div>
@@ -391,16 +416,14 @@ export default function Home() {
               {/* STEP 4 : ASK USER TO SELECT THE COVER COLOR */}
               <div className={styles.modifierSettings__colorSelect}>
                 <h2>Select background color</h2>
-                <ChromePicker
-                  color={bgColor}
-                  onChangeComplete={(color) => setBgColor(color)}
-                />
-                <p className={styles.notionColours}>Notion Colours</p>
-                <CirclePicker
-                  color={bgColor}
-                  onChangeComplete={(color) => setBgColor(color)}
-                  className={styles.circlePicker}
-                  colors={[
+                <ReactGPicker
+                  onChange={(color) => setBgColor(color)}
+                  format="hex"
+                  width="500px"
+                  solid
+                  // showGradientPosition={false}
+                  gradient
+                  defaultColors={[
                     "#9B9A97",
                     "#64473A",
                     "#D9730D",
@@ -410,6 +433,18 @@ export default function Home() {
                     "#6940A5",
                     "#AD1A72",
                     "#E03E3E",
+                    "linear-gradient(0deg, rgb(255, 177, 153) 0%, rgb(255, 8, 68) 100%)",
+                    "linear-gradient(270deg, rgb(251, 171, 126) 8.00%, rgb(247, 206, 104) 92.00%)",
+                    "linear-gradient(315deg, rgb(150, 230, 161) 8.00%, rgb(212, 252, 121) 92.00%)",
+                    "linear-gradient(to left, rgb(249, 240, 71) 0%, rgb(15, 216, 80) 100%)",
+                    "linear-gradient(315deg, rgb(194, 233, 251) 8.00%, rgb(161, 196, 253) 92.00%)",
+                    "linear-gradient(0deg, rgb(0, 198, 251) 0%, rgb(0, 91, 234) 100%)",
+                    "linear-gradient(0deg, rgb(167, 166, 203) 0%, rgb(137, 137, 186) 51.00%, rgb(137, 137, 186) 100%)",
+                    "linear-gradient(0deg, rgb(80, 82, 133) 0%, rgb(88, 94, 146) 15.0%, rgb(101, 104, 159) 28.00%, rgb(116, 116, 176) 43.00%, rgb(126, 126, 187) 57.00%, rgb(131, 137, 199) 71.00%, rgb(151, 149, 212) 82.00%, rgb(162, 161, 220) 92.00%, rgb(181, 174, 228) 100%)",
+                    "linear-gradient(270deg, rgb(255, 126, 179) 0%, rgb(255, 117, 140) 100%)",
+                    "linear-gradient(90deg, rgb(120, 115, 245) 0%, rgb(236, 119, 171) 100%)",
+                    "linear-gradient(45deg, #2e266f 0.00%, #9664dd38 100.00%)",
+                    "radial-gradient(circle at center, yellow 0%, #009966 50%, purple 100%)",
                   ]}
                 />
               </div>
