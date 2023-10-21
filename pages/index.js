@@ -77,8 +77,8 @@ export default function Home() {
       setGeneratedCoverSvg(
         `<svg version="1.1" 
         baseProfile="full" 
-        width="1500" height="600"
-        viewbox="0 0 1500 600"
+        width="1500" height="900"
+        viewbox="0 0 1500 900"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="${bgColor.hex}"/>
@@ -106,8 +106,8 @@ export default function Home() {
       setGeneratedCoverSvg(
         `<svg version="1.1"
           baseProfile="full"
-          viewbox="0 0 1500 600"
-          width="1500" height="600"
+          viewbox="0 0 1500 900"
+          width="1500" height="900"
           preserveAspectRatio="xMidYMid meet"
           xmlns="http://www.w3.org/2000/svg">
           <rect width="100%" height="100%" fill="${bgColor.hex}" />
