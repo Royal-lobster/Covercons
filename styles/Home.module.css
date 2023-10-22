@@ -205,6 +205,11 @@
   border: 2px solid green;
   background-color: #082032;
 }
+.previewSvg {
+  max-height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
 .mobilePreviewBoxWrapper {
   display: none;
 }

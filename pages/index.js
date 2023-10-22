@@ -10,6 +10,10 @@ import { getRegFromString } from "../lib/getRegFromString";
 import SVGToImage from "../lib/SVGToImage";
 import IconSearch from "../components/IconSearch";
 
+const IMAGE_WIDTH = 1500;
+const IMAGE_HEIGHT = 800;
+const ICON_SIZE = 140;
+
 export default function Home() {
   // REF TO CREATE A TAG FOR DOWNLOAD SVG
   const downloadHelper_a_tag = React.useRef();
@@ -77,8 +81,8 @@ export default function Home() {
       setGeneratedCoverSvg(
         `<svg version="1.1" 
         baseProfile="full" 
-        width="1500" height="900"
-        viewbox="0 0 1500 900"
+        width="${IMAGE_WIDTH}" height="${IMAGE_HEIGHT}"
+        viewbox="0 0 ${IMAGE_WIDTH} ${IMAGE_HEIGHT}"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="${bgColor.hex}"/>
@@ -106,12 +110,12 @@ export default function Home() {
       setGeneratedCoverSvg(
         `<svg version="1.1"
           baseProfile="full"
-          viewbox="0 0 1500 900"
-          width="1500" height="900"
+          viewbox="0 0 ${IMAGE_WIDTH} ${IMAGE_HEIGHT}"
+          width="${IMAGE_WIDTH}" height="${IMAGE_HEIGHT}"
           preserveAspectRatio="xMidYMid meet"
           xmlns="http://www.w3.org/2000/svg">
           <rect width="100%" height="100%" fill="${bgColor.hex}" />
-          <g transform="translate(610, 180) scale(10)" id="center_icon">${cleanedSvg(
+          <g transform="translate(${IMAGE_WIDTH/2 - ICON_SIZE}, ${IMAGE_HEIGHT/2 - ICON_SIZE}) scale(10)" id="center_icon">${cleanedSvg(
             iconColor
           )}</g>
          </svg>`
@@ -141,8 +145,8 @@ export default function Home() {
     SVGToImage({
       svg: generatedCoverSvg,
       mimetype: "image/png",
-      width: 3000,
-      height: 1200,
+      width: IMAGE_WIDTH * 2,
+      height: IMAGE_HEIGHT * 2,
       quality: 1,
       outputFormat: "blob",
     })
